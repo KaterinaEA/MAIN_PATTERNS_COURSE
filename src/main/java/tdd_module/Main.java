@@ -12,7 +12,7 @@ public class Main {
 
         double[] result = new double[3];
 
-        calcQuadraticEquation(a, b, c);
+        result = calcQuadraticEquation(a, b, c);
 
     }
 
