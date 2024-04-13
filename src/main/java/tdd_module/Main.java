@@ -16,16 +16,45 @@ public class Main {
 
     }
 
+    public static boolean checkCoef (double[] coefs){
+
+        boolean result = true;
+
+        for (double coef : coefs) {
+            if (Double.isNaN(coef) || Double.isInfinite(coef)) {
+                result = false;
+                return result;
+            }
+        }
+
+        return result;
+
+    }
+
     public static double[] calcQuadraticEquation(double a, double b, double c) {
 
+        double[] coefArray = new double[] {a,b,c};
+        double[] result = new double[3];
+        double e = 0.000001;
+
+        if ( !checkCoef(coefArray) ) {
+
+            System.out.println("Нельзя задавать не числовые коэфициенты");
+            return result;
+        }
+
+        if ( a <= 0 + e && a >= 0 - e ) {
+
+            System.out.println("Коэффициент a не может быть равным 0");
+            return result;
+        }
+
         // вычисление дискриминанта
-            double D = (b * b) - (4 * a * c);
-            double[] result = new double[3];
+        double D = (b * b) - (4 * a * c);
 
         System.out.println("D = " + D);
 
-
-        if (D > 0) {
+        if (D > 0 + e) {
                 // два различных корня
                 double x1 = (-b + Math.sqrt(D)) / (2 * a);
                 double x2 = (-b - Math.sqrt(D)) / (2 * a);
@@ -38,7 +67,7 @@ public class Main {
                 result[2] = D;
 
                 return result;
-            } else if (D == 0) {
+            } else if (D <= 0 + e && D >= 0 - e) {
                 // один корень
                 double x = -b / (2 * a);
 

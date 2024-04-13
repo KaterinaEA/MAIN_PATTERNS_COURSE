@@ -2,8 +2,7 @@ package tdd_module_test;
 
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
+import static junit.framework.Assert.*;
 
 public class TestCalcQuadraticEquation {
     @Test
@@ -17,7 +16,7 @@ public class TestCalcQuadraticEquation {
         //double expectedX2 = -1;
         double[] result;
 
-        result = tdd_module.Main.calcQuadraticEquation(a, b,c);//Main.main(null);
+        result = tdd_module.Main.calcQuadraticEquation(a, b, c);//Main.main(null);
 
         assertTrue(result[0] < 0 - e);
         assertTrue(result[1] < 0 - e);
@@ -54,17 +53,16 @@ public class TestCalcQuadraticEquation {
     }
 
     @Test
-    public void testZeroInput() {
+    public void testZeroCoef() {
         double a = 0;
         double b = 0;
         double c = 0;
         double[] result;
         double e = 0.00001;
 
-        double expectedD = 0.0;
         result = tdd_module.Main.calcQuadraticEquation(a, b, c);//Main.main(null);
 
-        assertEquals(expectedD, result[2], e);
+        assertTrue( Double.isNaN(result[2]) );
 
     }
 }
