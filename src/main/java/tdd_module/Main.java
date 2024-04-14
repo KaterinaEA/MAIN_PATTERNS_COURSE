@@ -39,13 +39,13 @@ public class Main {
 
         if ( !checkCoef(coefArray) ) {
 
-            System.out.println("Нельзя задавать не числовые коэфициенты");
+            System.out.println("Нельзя задавать не числовые коэфициенты!");
             return result;
         }
 
         if ( a <= 0 + e && a >= 0 - e ) {
 
-            System.out.println("Коэффициент a не может быть равным 0");
+            System.out.println("Коэффициент a не может быть равным 0!");
             return result;
         }
 
