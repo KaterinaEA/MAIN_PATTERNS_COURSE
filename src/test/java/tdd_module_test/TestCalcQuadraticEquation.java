@@ -62,7 +62,7 @@ public class TestCalcQuadraticEquation {
 
         result = tdd_module.Main.calcQuadraticEquation(a, b, c);//Main.main(null);
 
-        assertTrue( Double.isNaN(result[2]) );
+        assertTrue( Math.abs(result[0]) > 0 + e );
 
     }
 }
