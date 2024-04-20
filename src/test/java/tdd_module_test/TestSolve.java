@@ -31,35 +31,33 @@ public class TestSolve {
         double c = -1.0;
         double e = 0.000001;
 
-        double exceptedx1 = 1.0;
-        double exceptedx2 = -1.0;
+        double exceptedX1 = 1.0;
+        double exceptedX2 = -1.0;
 
         double[] result;
 
         result = tdd_module.Solve.calcQuadraticEquation(a, b, c);
 
-        assertEquals(exceptedx1, result[0], e);
-        assertEquals(exceptedx2, result[1], e);
+        assertEquals(exceptedX1, result[0], e);
+        assertEquals(exceptedX2, result[1], e);
 
     }
 
     @Test
     public void
-    testСompleteQuadraticEquationMultiRoot1 () {
+    testCompleteQuadraticEquationMultiRoot1 () {
 
         double a = 1.0; //1.0;
         double b = 2.0; //2.0;
         double c = 1.0; //0.999975;
         double e = 0.000001;
 
-        double exceptedx1 = - 1.0; //+ e;
-        //double exceptedx2 = - 1.0 - e;
+        double exceptedx1 = - 1.0;
 
         double[] result;
 
         result = tdd_module.Solve.calcQuadraticEquation(a, b, c);
 
-        //assertTrue(result[0] <= exceptedx1 && result[0] >= exceptedx2);
         assertEquals(exceptedx1, result[0], e);
         assertEquals(exceptedx1, result[1], e);
 
