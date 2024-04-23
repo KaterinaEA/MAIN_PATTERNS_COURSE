@@ -21,7 +21,7 @@ public class Solve {
 
         double[] coefArray = new double[] {a,b,c};
         double[] result = new double[3];
-        double e = 0.0001;
+        double e = 0.0000000000000000000000000000000000000000001;
 
         if ( !checkCoef(coefArray) ) {
 
@@ -29,7 +29,7 @@ public class Solve {
             return result;
         }
 
-        if ( Math.abs(a) == 0.00) {
+        if ( Math.abs(a) < e) {
 
             System.out.println("Коэффициент a не может быть равным 0!");
             return result;
@@ -40,7 +40,7 @@ public class Solve {
 
         System.out.println("D = " + D);
 
-        if (D > 0.0) {
+        if (D > e) {
             // два различных корня
             double x1 = (-b + Math.sqrt(D)) / (2 * a);
             double x2 = (-b - Math.sqrt(D)) / (2 * a);
@@ -53,7 +53,7 @@ public class Solve {
             result[2] = D;
 
             return result;
-        } else if (D <= 0.0 + e && D >= 0.0 - e) {
+        } else if (D <  e && D > - e) {
             // один корень
             double x = -b / (2 * a);
 
