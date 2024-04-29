@@ -66,7 +66,7 @@ public class TestSolve {
     @Test
     public void testAFloat() {
 
-        double a = -0.0000000000000000000000000000000000000000001;
+        double a = -Math.pow(1, -42);
         double b = 1.0;
         double c = 1.0;
         double[] result;
