@@ -1,5 +1,8 @@
 package lspIspModule1L2.rotate;
 
+import lombok.Getter;
+
+@Getter
 public class Angle {
 
     int _direction;
@@ -13,13 +16,5 @@ public class Angle {
     public static Angle plus(Angle a, Angle b) {
 
         return new Angle(a._direction + b._direction, a._n + b._n);
-    }
-
-    public int get_direction() {
-        return _direction;
-    }
-
-    public int get_n() {
-        return _n;
     }
 }

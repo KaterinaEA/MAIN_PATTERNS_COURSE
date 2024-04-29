@@ -1,8 +1,5 @@
 package lsp_isp_test;
 
-import lspIspModule1L2.move.IMovable;
-import lspIspModule1L2.move.Move;
-import lspIspModule1L2.move.Vector;
 import lspIspModule1L2.rotate.Angle;
 import lspIspModule1L2.rotate.IRotable;
 import lspIspModule1L2.rotate.Rotate;

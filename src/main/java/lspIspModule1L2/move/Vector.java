@@ -19,15 +19,8 @@ public class Vector {
         return _x;
     }
 
-    public void setX(int _x) {
-        this._x = _x;
-    }
-
     public int getY() {
         return _y;
     }
 
-    public void setY(int _y) {
-        this._y = _y;
-    }
 }
