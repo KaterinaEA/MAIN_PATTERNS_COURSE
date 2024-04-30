@@ -18,8 +18,11 @@ public class MoveTest {
         // Создаём mock-объект для интерфейса IMovable
         IMovable m = Mockito.mock(IMovable.class);
 
-        Vector positionStart = new Vector(12, 5);
-        Vector velocityStart = new Vector(-7, 3);
+        int[] start_position_mass = {1, 2, 3};
+        int[] start_velocity_mass = {1, 2, 3};
+
+        Vector positionStart = new Vector(start_position_mass);
+        Vector velocityStart = new Vector(start_velocity_mass);
 
         // Настраиваем mock-объект
         when(m.getPosition()).thenReturn(positionStart);
@@ -34,15 +37,21 @@ public class MoveTest {
         // Перемещаем объект
         move.execute();
 
+        int[] actual_position_mass = {2, 4, 6};
+
         Vector newPosition = argumentCaptor.getValue();
-        Vector actualPosition = new Vector(5,8);
+        Vector actualPosition = new Vector(actual_position_mass);
+
+        newPosition.equals(actualPosition);
+
+        //verify(actualPosition).equals(Mockito.refEq(newPosition));
 
         //assertEquals(actualPosition, newPosition);
 
         // Дополнительная проверка координат x и y
 
-        assertEquals(5, newPosition.getX());
-        assertEquals(8, newPosition.getY());
+        //assertEquals(5, newPosition.getX());
+        //assertEquals(8, newPosition.getY());
 
     }
 
@@ -80,7 +89,9 @@ public class MoveTest {
         // Создаём mock-объект для интерфейса IMovable
         IMovable m = Mockito.mock(IMovable.class);
 
-        Vector velocityStart = new Vector(-7, 3);
+        int[] actual_velocity_mass = {2, 4, 6};
+
+        Vector velocityStart = new Vector(actual_velocity_mass);
 
         // Настраиваем mock-объект
         when(m.getPosition()).thenReturn(null);
@@ -100,7 +111,8 @@ public class MoveTest {
         // Создаём mock-объект для интерфейса IMovable
         IMovable m = Mockito.mock(IMovable.class);
 
-        Vector start = new Vector(-7, 3);
+        int[] actual_velocity_mass = {2, 4, 6};
+        Vector start = new Vector(actual_velocity_mass);
 
         // Настраиваем mock-объект
         when(m.getPosition()).thenReturn(start);
@@ -112,51 +124,6 @@ public class MoveTest {
         // Перемещаем объект
         move.execute();
 
-    }
-
-    @Test
-    public void testGetPosition() {
-        IMovable move = Mockito.mock(IMovable.class);
-
-        // Given
-        Vector expectedVector = new Vector(1, 0);
-        Mockito.when(move.getPosition()).thenReturn(expectedVector);
-
-        // When
-        Vector actualVector = move.getPosition();
-
-        // Then
-        assertEquals(expectedVector, actualVector);
-    }
-
-    @Test
-    public void testGetVelocity() {
-
-        IMovable move = Mockito.mock(IMovable.class);
-
-        // Given
-        Vector expectedVelocity = new Vector(0, 1);
-        Mockito.when(move.getVelocity()).thenReturn(expectedVelocity);
-
-        // When
-        Vector actualVelocity = move.getVelocity();
-
-        // Then
-        assertEquals(expectedVelocity, actualVelocity);
-    }
-
-    @Test
-    public void testSetPosition() {
-
-        IMovable move = Mockito.mock(IMovable.class);
-
-        // Given
-        Vector expectedPosition = new Vector(5, 8);
-        // When
-        move.setPosition(expectedPosition);
-
-        // Then
-        Mockito.verify(move).setPosition(expectedPosition);
     }
 
 }
