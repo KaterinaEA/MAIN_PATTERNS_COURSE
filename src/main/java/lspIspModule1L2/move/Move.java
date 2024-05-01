@@ -13,6 +13,8 @@ public class Move implements ICommand {
             m.setPosition(Vector.plus(m.getPosition(),
                     m.getVelocity()
             ));
+
+            throw new NullPointerException();
        // } catch (Exception e) {
        //     System.out.println("Move failed");
             //e.printStackTrace();
