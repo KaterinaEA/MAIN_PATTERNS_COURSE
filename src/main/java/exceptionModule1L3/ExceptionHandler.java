@@ -9,13 +9,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.BlockingQueue;
 import java.util.function.Supplier;
 
 public class ExceptionHandler {
 
     private final Map<Class<? extends ICommand>, Map<Class<? extends Exception>, ICommand>> store;
 
-    public ExceptionHandler() {
+    public ExceptionHandler(BlockingQueue<ICommand> queue) {
         store = new HashMap<>();
 
         Map<Class<? extends Exception>, ICommand> map = new HashMap<>();

@@ -27,7 +27,7 @@ public class CommandProcessor {
                 c.execute();
 
             } catch (Exception e) {
-                new ExceptionHandler().handle(command, e).execute();
+                new ExceptionHandler(q).handle(command, e).execute();
                 //IoC.Resolve<ICommand>("ExceptionHandler.Handle", c, e).Execute();
             }
 
