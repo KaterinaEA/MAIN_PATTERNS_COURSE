@@ -1,4 +1,4 @@
-package lsp_isp_test;
+package lspIspTest;
 
 import lspIspModule1L2.move.IMovable;
 import lspIspModule1L2.move.Move;
