@@ -1,34 +1,35 @@
 package exceptionModule1L3;
 
-import lspIspModule1L2.move.IMovable;
-import lspIspModule1L2.move.Move;
-import lspIspModule1L2.move.Vector;
-
-import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+
+import org.slf4j.LoggerFactory;
 
 public class CommandProcessor {
 
-    // Создаем blocking queue с максимальным размером 100
-    BlockingQueue<ICommand> q = new LinkedBlockingQueue<>(100);
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(LogCommand.class);
 
-    public void run(ICommand command) throws InterruptedException {
+    Queue<ICommand> q;
 
-        q.put(command);
+    public CommandProcessor(Queue<ICommand> queue) {   this.q = queue;  }
+
+    public void runProcess()  {
 
         while (!q.isEmpty()) {
 
-            var c = q.take();
+            var c = q.poll();
 
             try {
 
                 c.execute();
 
             } catch (Exception e) {
-                new ExceptionHandler(q).handle(command, e).execute();
-                //IoC.Resolve<ICommand>("ExceptionHandler.Handle", c, e).Execute();
+                try {
+                    ExceptionHandler.handle(c, e).execute();
+                    //IoC.Resolve<ICommand>("ExceptionHandler.Handle", c, e).Execute();
+                } catch (Exception ex) {
+                    LOGGER.info("Error command: {} , exception:{}", c.toString(), ex.getMessage());
+                }
+
             }
 
         }

@@ -14,51 +14,27 @@ import java.util.function.Supplier;
 
 public class ExceptionHandler {
 
-    private final Map<Class<? extends ICommand>, Map<Class<? extends Exception>, ICommand>> store;
+    private static Map<Class<? extends ICommand>, Map<Class<? extends Exception>, ICommand>> store;
 
-    public ExceptionHandler(BlockingQueue<ICommand> queue) {
-        store = new HashMap<>();
-
-        Map<Class<? extends Exception>, ICommand> map = new HashMap<>();
-
-        map.put(NullPointerException.class, new ICommand() {
-            @Override
-            public void execute() {
-
-                ILogger l = new ILogger() {
-                    @Override
-                    public void log(LogCommand logCommand) {
-
-                    }
-
-                    @Override
-                    public LogCommand getLogCommand() {
-                        return null;
-                    }
-                };
-
-                ICommand command = new Logging(l); // Создаем экземпляр команды
-
-
-
-            }
-        });
-
-/*        map.put(NullPointerException.class, new ICommand() {
-            @Override
-            public void execute() {
-                System.out.println("asdasdasdasdad");
-            }
-        });*/
-
-        store.put(Move.class, map);
+    private ExceptionHandler() {
 
     }
 
-    public ICommand handle(ICommand command, Exception e) {
+    public static ICommand handle(ICommand command, Exception e) {
         return store.getOrDefault(command.getClass(), Collections.emptyMap()).getOrDefault(e.getClass(), null);
         //return store.get(command.getClass()).get(e.getClass());
     }
 
+    public static void RegisterHandler (ICommand command, Exception e, ICommand h) {
+
+        store = new HashMap<>();
+
+        Map<Class<? extends Exception>, ICommand> map = new HashMap<>();
+
+        map.put(e.getClass(), h);
+
+        store.put(command.getClass(), map);
+
+    }
 
 }

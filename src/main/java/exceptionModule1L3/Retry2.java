@@ -1,10 +1,10 @@
 package exceptionModule1L3;
 
-public class Retry implements ICommand {
+public class Retry2 implements ICommand {
 
     private final ICommand c;
 
-    public Retry(ICommand command) {
+    public Retry2(ICommand command) {
 
         c = command;
 
