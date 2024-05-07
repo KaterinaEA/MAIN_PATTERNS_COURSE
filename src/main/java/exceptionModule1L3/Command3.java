@@ -5,6 +5,6 @@ public class Command3 implements ICommand {
     public void execute() {
 
         System.out.println("Command3 executed");
-        throw new NullPointerException();
+        throw new ArithmeticException();
     }
 }

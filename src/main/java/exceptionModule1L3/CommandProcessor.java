@@ -27,7 +27,8 @@ public class CommandProcessor {
                     ExceptionHandler.handle(c, e).execute();
                     //IoC.Resolve<ICommand>("ExceptionHandler.Handle", c, e).Execute();
                 } catch (Exception ex) {
-                    LOGGER.info("Error command: {} , exception:{}", c.toString(), ex.getMessage());
+                        LOGGER.error(ex.getMessage(), ex);
+
                 }
 
             }

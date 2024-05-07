@@ -15,19 +15,50 @@ import java.util.function.Supplier;
 public class ExceptionHandler {
 
     private static Map<Class<? extends ICommand>, Map<Class<? extends Exception>, ICommand>> store;
+    private static ExceptionHandler INSTANCE;
+
 
     private ExceptionHandler() {
-
+        store = new HashMap<>();
     }
 
+    public static ExceptionHandler getInstance() {
+        if(INSTANCE == null) {
+            INSTANCE = new ExceptionHandler();
+        }
+
+        return INSTANCE;
+    }
+
+
+
     public static ICommand handle(ICommand command, Exception e) {
+
+
+        System.out.println("start " + command.getClass().getName());
+
+        try {
+
+            ICommand handler = store.get(command.getClass()).get(e.getClass());
+
+        } catch (Exception ex) {
+
+            ICommand handler_default = new LogCommand(e);
+
+            System.out.println("handler_default "+ handler_default.getClass().getName());
+
+            return handler_default;
+        }
+
+
+        System.out.println("handler found");
+
+
         return store.getOrDefault(command.getClass(), Collections.emptyMap()).getOrDefault(e.getClass(), null);
-        //return store.get(command.getClass()).get(e.getClass());
+
     }
 
     public static void RegisterHandler (ICommand command, Exception e, ICommand h) {
-
-        store = new HashMap<>();
 
         Map<Class<? extends Exception>, ICommand> map = new HashMap<>();
 
