@@ -21,14 +21,16 @@ public class ExceptionHandlerTest {
         this.nullPointerException = new NullPointerException();
         this.runtimeException = new RuntimeException();
 
-        ExceptionHandler exceptionHandler = ExceptionHandler.getInstance();
-
     }
 
     @Test
     public void testLogCommand() {
         //Реализовать Команду, которая записывает информацию о выброшенном исключении в лог.
         Queue<ICommand> q = new LinkedList<>();
+
+        ExceptionHandler exceptionHandler = ExceptionHandler.getInstance(q);
+
+        IStrategyHandler repeat = new RepeateLogStrategyHandler( command, e, _queue);
 
         ICommand command1 = new Command1();
 
