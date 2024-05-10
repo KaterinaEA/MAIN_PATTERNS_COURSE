@@ -28,10 +28,6 @@ public class ExceptionHandlerTest {
         //Реализовать Команду, которая записывает информацию о выброшенном исключении в лог.
         Queue<ICommand> q = new LinkedList<>();
 
-        ExceptionHandler exceptionHandler = ExceptionHandler.getInstance(q);
-
-        IStrategyHandler repeat = new RepeateLogStrategyHandler( command, e, _queue);
-
         ICommand command1 = new Command1();
 
         LogCommand commandLog = new LogCommand(nullPointerException);
@@ -115,16 +111,9 @@ public class ExceptionHandlerTest {
 
         ICommand command4 = new Command4();
 
-        Retry retry = new Retry(command4);
+        IStrategyHandler repeat = new RepeatLogStrategyHandler(command4, nullPointerException, q);
 
-        LogCommand logCommand = new LogCommand(nullPointerException);
-
-        AddQueue addQueueLogCommand = new AddQueue(q, logCommand);
-        AddQueue addQueueRetry = new AddQueue(q, retry);
-
-        ExceptionHandler.RegisterHandler(command4, nullPointerException, addQueueRetry );
-
-        ExceptionHandler.RegisterHandler(retry, nullPointerException, addQueueLogCommand );
+        ExceptionHandler.RegisterHandler(command4, nullPointerException, repeat.strategyHandler());
 
         q.add(command4);
 
@@ -143,21 +132,9 @@ public class ExceptionHandlerTest {
 
         ICommand command5 = new Command5();
 
-        Retry retry = new Retry(command5);
+        IStrategyHandler repeat2 = new Repeat2LogStrategyHandler(command5, nullPointerException, q);
 
-        Retry2 retry2 = new Retry2(retry);
-
-        LogCommand logCommand = new LogCommand(runtimeException);
-
-        AddQueue addQueueLogCommand = new AddQueue(q, logCommand);
-        AddQueue addQueueRetry = new AddQueue(q, retry);
-        AddQueue addQueueRetry2 = new AddQueue(q, retry2);
-
-        ExceptionHandler.RegisterHandler(command5, runtimeException, addQueueRetry );
-
-        ExceptionHandler.RegisterHandler(retry, runtimeException, addQueueRetry2 );
-
-        ExceptionHandler.RegisterHandler(retry2, runtimeException, addQueueLogCommand );
+        ExceptionHandler.RegisterHandler(command5, runtimeException, repeat2.strategyHandler() );
 
         q.add(command5);
 

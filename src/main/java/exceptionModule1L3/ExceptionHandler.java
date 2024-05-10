@@ -34,27 +34,21 @@ public class ExceptionHandler {
 
         try {
 
-             //ICommand handler = store.get(command.getClass()).get(e.getClass());
+             ICommand handler = store.get(command.getClass()).get(e.getClass());
 
-
-
-            IStrategyHandler repeat = new RepeateLogStrategyHandler( command, e, _queue);
-
+            _queue.add(handler);
 
         } catch (Exception ex) {
 
             ICommand handler_default = new LogCommand(e);
 
+            _queue.add(handler_default);
+
             System.out.println("handler_default " + handler_default.getClass().getName());
 
-            //return handler_default;
         }
 
-
         System.out.println("handler found");
-
-
-        //return store.getOrDefault(command.getClass(), Collections.emptyMap()).getOrDefault(e.getClass(), null);
 
     }
 
