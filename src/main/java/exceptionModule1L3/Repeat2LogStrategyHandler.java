@@ -1,6 +1,5 @@
 package exceptionModule1L3;
 
-import java.util.LinkedList;
 import java.util.Queue;
 
 public class Repeat2LogStrategyHandler implements IStrategyHandler{
