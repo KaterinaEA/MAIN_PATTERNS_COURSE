@@ -5,7 +5,7 @@ import java.util.Queue;
 
 public class Repeat2LogStrategyHandler implements IStrategyHandler{
 
-    Queue<ICommand> queue = new LinkedList<>();
+    Queue<ICommand> queue;
 
     ICommand command;
     Exception exception;

@@ -8,7 +8,6 @@ import java.util.*;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
-import static org.mockito.Mockito.verify;
 
 public class ExceptionHandlerTest {
 

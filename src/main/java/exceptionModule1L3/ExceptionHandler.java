@@ -7,9 +7,7 @@ public class ExceptionHandler {
 
     private static ExceptionHandler INSTANCE;
 
-    private Queue<ICommand> _queue;
-
-    IStrategyHandler _strategyHandler;
+    private final Queue<ICommand> _queue;
 
     private static Map<Class<? extends ICommand>, Map<Class<? extends Exception>, ICommand>> store;
 
