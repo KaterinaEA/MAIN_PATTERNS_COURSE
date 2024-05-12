@@ -31,7 +31,9 @@ public class ExceptionHandlerTest {
 
         LogCommand commandLog = new LogCommand(nullPointerException);
 
-        ExceptionHandler.RegisterHandler(command1, nullPointerException, commandLog );
+        ExceptionHandler exceptionHandler = ExceptionHandler.getInstance(q);
+
+        exceptionHandler.RegisterHandler(command1, nullPointerException, commandLog );
 
         q.add(command1);
 
@@ -52,7 +54,9 @@ public class ExceptionHandlerTest {
         LogCommand commandLog = new LogCommand(runtimeException);
         AddQueue addQueueLogCommand = new AddQueue(q, commandLog);
 
-        ExceptionHandler.RegisterHandler(command2, runtimeException, addQueueLogCommand );
+        ExceptionHandler exceptionHandler = ExceptionHandler.getInstance(q);
+
+        exceptionHandler.RegisterHandler(command2, runtimeException, addQueueLogCommand );
 
         q.add(command2);
 
@@ -72,7 +76,9 @@ public class ExceptionHandlerTest {
 
         Retry retry = new Retry(command3);
 
-        ExceptionHandler.RegisterHandler(command3, new ArithmeticException(), retry );
+        ExceptionHandler exceptionHandler = ExceptionHandler.getInstance(q);
+
+        exceptionHandler.RegisterHandler(command3, new ArithmeticException(), retry );
 
         q.add(command3);
 
@@ -92,12 +98,14 @@ public class ExceptionHandlerTest {
 
         Retry retry = new Retry(command3);
 
-        ExceptionHandler.RegisterHandler(retry, new ArithmeticException(), retry );
+        ExceptionHandler exceptionHandler = ExceptionHandler.getInstance(q);
 
-        q.add(retry);
+        exceptionHandler.RegisterHandler(retry, new ArithmeticException(), retry );
+
+        q.add(command3);
 
         assertEquals(1, q.size());
-        assertTrue(q.contains(retry));
+        assertTrue(q.contains(command3));
 
         new CommandProcessor(q).runProcess();
 
@@ -110,9 +118,11 @@ public class ExceptionHandlerTest {
 
         ICommand command4 = new Command4();
 
-        IStrategyHandler repeat = new RepeatLogStrategyHandler(command4, nullPointerException, q);
+        ICommand repeat = new RepeatLogStrategyHandler(command4, nullPointerException, q);
 
-        ExceptionHandler.RegisterHandler(command4, nullPointerException, repeat.strategyHandler());
+        ExceptionHandler exceptionHandler = ExceptionHandler.getInstance(q);
+
+        exceptionHandler.RegisterHandler(command4, nullPointerException, repeat);
 
         q.add(command4);
 
@@ -131,9 +141,11 @@ public class ExceptionHandlerTest {
 
         ICommand command5 = new Command5();
 
-        IStrategyHandler repeat2 = new Repeat2LogStrategyHandler(command5, nullPointerException, q);
+        ICommand repeat2 = new Repeat2LogStrategyHandler(command5, runtimeException, q);
 
-        ExceptionHandler.RegisterHandler(command5, runtimeException, repeat2.strategyHandler() );
+        ExceptionHandler exceptionHandler = ExceptionHandler.getInstance(q);
+
+        exceptionHandler.RegisterHandler(command5, runtimeException, repeat2 );
 
         q.add(command5);
 

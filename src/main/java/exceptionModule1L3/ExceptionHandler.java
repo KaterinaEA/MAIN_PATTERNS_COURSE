@@ -9,10 +9,12 @@ public class ExceptionHandler {
 
     private final Queue<ICommand> _queue;
 
-    private static Map<Class<? extends ICommand>, Map<Class<? extends Exception>, ICommand>> store;
+    // Map<Key, Map<Key, Value>> map = new HashMap<>();
+    private final Map<Class<? extends ICommand>, Map<Class<? extends Exception>, ICommand>> store;
 
     private ExceptionHandler(Queue<ICommand> queue) {
 
+        store = new HashMap<>();
         _queue = queue;
 
     }
@@ -50,7 +52,7 @@ public class ExceptionHandler {
 
     }
 
-    public static void RegisterHandler (ICommand command, Exception e, ICommand h) {
+    public void RegisterHandler (ICommand command, Exception e, ICommand h) {
 
         Map<Class<? extends Exception>, ICommand> map = new HashMap<>();
 

@@ -2,7 +2,7 @@ package exceptionModule1L3;
 
 import java.util.Queue;
 
-public class RepeatLogStrategyHandler implements IStrategyHandler {
+public class RepeatLogStrategyHandler implements ICommand {
 
     Queue<ICommand> queue;
 
@@ -18,22 +18,19 @@ public class RepeatLogStrategyHandler implements IStrategyHandler {
     }
 
     @Override
-    public ICommand strategyHandler() {
+    public void execute() {
+
         // при первом выбросе исключения повторить команду, при повторном выбросе исключения записать информацию в лог.
 
         Retry retry = new Retry(command);
-
-        AddQueue addQueueRetry = new AddQueue(queue, retry);
 
         LogCommand logCommand = new LogCommand(exception);
 
         queue.add(retry);
 
-        ExceptionHandler.RegisterHandler(retry, exception, logCommand );
+        ExceptionHandler exceptionHandler = ExceptionHandler.getInstance(queue);
 
-        return addQueueRetry;
+        exceptionHandler.RegisterHandler(retry, exception, logCommand );
 
     }
-
-
 }
