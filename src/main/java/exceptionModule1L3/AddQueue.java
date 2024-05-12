@@ -8,10 +8,10 @@ public class AddQueue implements ICommand {
 
     private final ICommand c;
 
-    public AddQueue(Queue<ICommand> queue, ICommand commandLog) {
+    public AddQueue(Queue<ICommand> queue, ICommand command) {
 
         this.q = queue;
-        this.c = commandLog;
+        this.c = command;
 
     }
 

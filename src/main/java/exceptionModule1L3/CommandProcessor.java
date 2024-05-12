@@ -10,7 +10,7 @@ public class CommandProcessor {
 
     Queue<ICommand> q;
 
-    public CommandProcessor(Queue<ICommand> queue) {   this.q = queue;  }
+    public CommandProcessor(Queue<ICommand> queue) {  this.q = queue;  }
 
     public void runProcess()  {
 
@@ -24,7 +24,8 @@ public class CommandProcessor {
 
             } catch (Exception e) {
                 try {
-                    ExceptionHandler.handle(c, e).execute();
+                    ExceptionHandler exceptionHandler = ExceptionHandler.getInstance(q);
+                    exceptionHandler.handle(c, e);
                     //IoC.Resolve<ICommand>("ExceptionHandler.Handle", c, e).Execute();
                 } catch (Exception ex) {
                         LOGGER.error(ex.getMessage(), ex);
