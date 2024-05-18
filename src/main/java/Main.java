@@ -12,11 +12,13 @@ public class Main {
     public static void main(String[] args) {
 
 
-        IoC.resolve("IoC.Register"
+/*        IoC.Resolve("IoC.Register"
                 , "Command1"
                 , () -> {
             return new Command1();
-        }).execute();
+        }).execute();*/
+
+        //IoC.resolve("IoC.Register", "exceptionModule1L3.Command1", (Object[] args) ->{return  new Command1();});
 
     }
 
