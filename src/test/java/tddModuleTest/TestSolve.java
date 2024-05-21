@@ -1,4 +1,4 @@
-package tdd_module_test;
+package tddModuleTest;
 
 import org.junit.Test;
 

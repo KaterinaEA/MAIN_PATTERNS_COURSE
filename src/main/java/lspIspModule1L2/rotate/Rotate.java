@@ -1,6 +1,8 @@
 package lspIspModule1L2.rotate;
 
-public class Rotate {
+import exceptionModule1L3.ICommand;
+
+public class Rotate implements ICommand {
     IRotable _rotable;
     public Rotate(IRotable rotable) {
         _rotable = rotable;
