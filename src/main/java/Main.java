@@ -2,6 +2,9 @@ import exceptionModule1L3.Command1;
 import exceptionModule1L3.CommandProcessor;
 import exceptionModule1L3.ICommand;
 import exceptionModule1L3.LogCommand;
+import iocModule2L9.CommandMove;
+import iocModule2L9.IResolver;
+import iocModule2L9.Init;
 import iocModule2L9.IoC;
 import lspIspModule1L2.move.IMovable;
 import lspIspModule1L2.move.Move;
@@ -11,6 +14,14 @@ import lspIspModule1L2.rotate.Rotate;
 public class Main {
     public static void main(String[] args) {
 
+        IoC ioc = new IoC();
+        Init init = new Init();
+
+        init.init();
+
+        //IResolver<CommandMove> move = ioc.resolve("CommandMove");
+
+        //CommandMove move1 =  ioc.resolve("CommandMove");
 
 /*        IoC.Resolve("IoC.Register"
                 , "Command1"

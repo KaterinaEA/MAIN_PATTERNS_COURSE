@@ -5,23 +5,21 @@ import exceptionModule1L3.ICommand;
 import java.util.HashMap;
 import java.util.function.Function;
 
-public class Init implements ICommand {
+public class Init {
 
-    public HashMap<String, Function<String, Object> > mapDependency = new HashMap<>();
+    public void init() {
 
-    @Override
-    public void execute() {
+        ICommand refCommandMove;
 
-        IoC.resolve("IoC.Register"
-                , "CommandMove"
-                , (args) -> {
-                    return new CommandMove();
-                }).execute();
+        refCommandMove = () -> {
 
-/*        IoC.Resolve<ICommand>(
-                "IoC.Register"
-                , "A"
-                , (object[] args) => {new B();}
-        ).Execute;*/
+            ICommand commandMove = new CommandMove();
+
+            commandMove.execute();
+        };
+
+        IoC.register( "CommandMove"
+                , refCommandMove);
+
     }
 }
