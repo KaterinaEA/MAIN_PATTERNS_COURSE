@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Класс Ioc реализует механизм разрешения зависимостей.
@@ -17,34 +18,16 @@ import java.util.function.Function;
  */
 public class IoC {
 
-    private static final Map<String, Object> dictionaryDependency = new HashMap<>();
+    private static final Map<String, Supplier> dictionaryDependency = new HashMap<>();
 
-    private static final BiFunction<String, Object[], Object> _strategy =
-            (dependency, args) -> {
-                if (dictionaryDependency.containsKey(dependency)) {
-
-                    dictionaryDependency.get(dependency);
-
-                    return dictionaryDependency.get(dependency);
-
-                } else {
-
-                    throw new IllegalArgumentException("Dependency \"" + dependency + "\" is not found.");
-
-                }
-            };
-
-
-    public static void register (String dependency, Function<String, Object> strategy) {
-
+    public static void register(String dependency, Supplier<Object> strategy) {
         dictionaryDependency.put(dependency, strategy);
-
     }
 
     public static <T> T resolve(String d, Object... args) {
-
-        return (T) _strategy.apply(d, args);
-
+        if (dictionaryDependency.containsKey(d)) {
+            return (T) dictionaryDependency.get(d).get();
+        }
+        throw new IllegalArgumentException("Dependency \"" + d + "\" is not found.");
     }
-
 }

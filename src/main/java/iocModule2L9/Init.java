@@ -10,7 +10,7 @@ public class Init {
     public void init() {
 
         IoC.register( "CommandMove"
-                , (String dependency) -> (ICommand) new CommandMove()
+                , () -> (ICommand) new CommandMove()
         );
 
     }
