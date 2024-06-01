@@ -1,7 +1,5 @@
 package iocModule2L9;
 
-import exceptionModule1L3.ICommand;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -17,7 +15,7 @@ import java.util.function.Function;
  * <p>
  * Метод проверяет, есть ли в карте strategy запись с ключом dependency. Если да, то метод Resolve<T> возвращает объект типа T, который хранится в карте strategy. В противном случае метод Resolve<T> генерирует исключение ArgumentException.
  */
-public class IoC implements IResolver{
+public class IoC {
 
     private static final Map<String, Object> dictionaryDependency = new HashMap<>();
 
@@ -37,15 +35,16 @@ public class IoC implements IResolver{
             };
 
 
-    public static void register (String dependency, Object strategy) {
+    public static void register (String dependency, Function<String, Object> strategy) {
 
         dictionaryDependency.put(dependency, strategy);
 
     }
 
-    @Override
-    public Object resolve(String d, Object... args) {
-        return _strategy.apply(d, args);
+    public static <T> T resolve(String d, Object... args) {
+
+        return (T) _strategy.apply(d, args);
+
     }
 
 }

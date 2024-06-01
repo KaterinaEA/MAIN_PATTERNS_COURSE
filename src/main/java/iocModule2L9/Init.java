@@ -9,17 +9,9 @@ public class Init {
 
     public void init() {
 
-        ICommand refCommandMove;
-
-        refCommandMove = () -> {
-
-            ICommand commandMove = new CommandMove();
-
-            commandMove.execute();
-        };
-
         IoC.register( "CommandMove"
-                , refCommandMove);
+                , (String dependency) -> (ICommand) new CommandMove()
+        );
 
     }
 }
