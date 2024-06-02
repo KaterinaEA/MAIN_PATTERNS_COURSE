@@ -19,7 +19,7 @@ import java.util.function.Supplier;
  * <p>
  * Метод проверяет, есть ли в карте strategy запись с ключом dependency. Если да, то метод Resolve<T> возвращает объект типа T, который хранится в карте strategy. В противном случае метод Resolve<T> генерирует исключение ArgumentException.
  */
-public class IoC {
+/*public class IoC {
 
     private static final Map<String, Supplier> dictionaryDependency = new HashMap<>();
 
@@ -33,30 +33,31 @@ public class IoC {
         }
         throw new IllegalArgumentException("Dependency \"" + d + "\" is not found.");
     }
-}
+}*/
 
-/*public class IoC {
-    private static final Map<String, Function<Objects,Object>> dictionaryDependency = new HashMap<>();
+public class IoC {
+    private static final Map<String, Function<Object, Object>> dictionaryDependency = new HashMap<>();
 
-    public static <T, R> void register(String dependency, Function<T,R> strategy) {
+    public static <T, R> void register(String dependency, Function<Object, Object> strategy) {
         dictionaryDependency.put(dependency, strategy);
     }
 
-    public static <T, R> R resolve(String d, T... args) {
+    public static <T, R> R resolve(String d, Object... args) {
         if (dictionaryDependency.containsKey(d)) {
-            Function<T, R> resolvedStrategy = dictionaryDependency.get(d);
+            Function<Object, Object> resolvedStrategy = dictionaryDependency.get(d);
             if (resolvedStrategy != null) {
                 // Развертываем массив аргументов
                 R result = null;
-                for (T arg : args) {
-                    result = resolvedStrategy.apply(arg); // Предполагаем, что второй аргумент не используется
+                for (Object arg : args) {
+                    result = (R) resolvedStrategy.apply(arg); // Предполагаем, что второй аргумент не используется
+                    break; // Добавил break, чтобы гарантировать, что resolve вызывается только один раз
                 }
                 return result;
             }
         }
         throw new IllegalArgumentException("Dependency " + d + " is not found.");
     }
-}*/
+}
 
 /*public class IoC {
 

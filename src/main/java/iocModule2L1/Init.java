@@ -15,8 +15,7 @@ public class Init {
                 , () -> new LinkedList()
         );
 
-        IoC.register( "CommandMove"
-                , () -> (ICommand) new CommandMove()
+        IoC.register( "CommandMove", () -> (ICommand) new CommandMove()
         );
 
         //IoC.register("Retry", (ICommand c) -> new Retry(c));
