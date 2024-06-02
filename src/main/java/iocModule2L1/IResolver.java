@@ -1,4 +1,4 @@
-package iocModule2L9;
+package iocModule2L1;
 
 public interface IResolver<T> {
 

@@ -1,4 +1,4 @@
-package iocModule2L9.Scope;
+package iocModule2L1.Scope;
 
 public interface IDependencyResolver<T> {
 

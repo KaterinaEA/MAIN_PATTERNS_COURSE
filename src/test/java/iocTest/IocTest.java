@@ -1,10 +1,9 @@
 package iocTest;
 
-import exceptionModule1L3.AddQueue;
 import exceptionModule1L3.ICommand;
-import iocModule2L9.CommandMove;
-import iocModule2L9.Init;
-import iocModule2L9.IoC;
+import iocModule2L1.CommandMove;
+import iocModule2L1.Init;
+import iocModule2L1.IoC;
 import org.junit.Test;
 
 import java.util.Queue;
@@ -36,9 +35,9 @@ public class IocTest {
 
         CommandMove move = IoC.resolve("CommandMove");
 
-        AddQueue addQueue = IoC.resolve("AddQueue", q, move);
+        //AddQueue addQueue = IoC.resolve("AddQueue", q, move);
 
-        addQueue.execute();
+        //addQueue.execute();
 
     }
 

@@ -1,6 +1,6 @@
-import iocModule2L9.CommandMove;
-import iocModule2L9.Init;
-import iocModule2L9.IoC;
+import iocModule2L1.CommandMove;
+import iocModule2L1.Init;
+import iocModule2L1.IoC;
 
 
 public class Main {
