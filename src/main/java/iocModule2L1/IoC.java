@@ -1,10 +1,9 @@
 package iocModule2L1;
 
-import org.checkerframework.checker.units.qual.C;
-
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+import exceptionModule1L3.ICommand;
+
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -17,8 +16,38 @@ import java.util.function.Supplier;
  * dependency — строка, которая используется для идентификации объекта, который нужно разрешить.
  * args — массив объектов, которые могут быть использованы для разрешения зависимости.
  * <p>
- * Метод проверяет, есть ли в карте strategy запись с ключом dependency. Если да, то метод Resolve<T> возвращает объект типа T, который хранится в карте strategy. В противном случае метод Resolve<T> генерирует исключение ArgumentException.
+ * Метод проверяет, есть ли в карте strategy запись с ключом dependency. Если да, то метод Resolve<R> возвращает объект типа R, который хранится в карте strategy. В противном случае метод Resolve<R> генерирует исключение ArgumentException.
  */
+public class IoC {
+    private static final Map<String, Object> dictionaryDependency = new HashMap<>();
+
+    public static void register(String dependency, Object strategy) {
+        dictionaryDependency.put(dependency, strategy);
+    }
+
+    public static <R> R resolve(String d, Object... args) {
+        if (dictionaryDependency.containsKey(d)) {
+            Object resolvedStrategy = dictionaryDependency.get(d);
+            if (resolvedStrategy instanceof Function || resolvedStrategy instanceof BiFunction<?,?,?>) {
+                    //Function<Object[],R> functionArray = (Function<Object[],R>) resolvedStrategy;
+                    //return functionArray.apply(args);
+                    if (args.length > 1) { // Проверяем, что args является массивом объектов
+                        BiFunction<Object, Object, R> bifunction = (BiFunction<Object, Object, R>) resolvedStrategy;
+                        return bifunction.apply(args[0], args[1]);
+                    } else {
+                        // Если args является одиночным объектом
+                        Function<Object,R> function = (Function<Object,R>) resolvedStrategy;
+                        return function.apply(args[0]);
+                    }
+            } else if (resolvedStrategy instanceof Supplier) {
+                Supplier<Object> resolveNotArgs = (Supplier<Object>) dictionaryDependency.get(d);
+                return (R) resolveNotArgs.get();
+            }
+        }
+        throw new IllegalArgumentException("Dependency " + d + " is not found.");
+    }
+}
+
 /*public class IoC {
 
     private static final Map<String, Supplier> dictionaryDependency = new HashMap<>();
@@ -34,30 +63,6 @@ import java.util.function.Supplier;
         throw new IllegalArgumentException("Dependency \"" + d + "\" is not found.");
     }
 }*/
-
-public class IoC {
-    private static final Map<String, Function<Object, Object>> dictionaryDependency = new HashMap<>();
-
-    public static <T, R> void register(String dependency, Function<Object, Object> strategy) {
-        dictionaryDependency.put(dependency, strategy);
-    }
-
-    public static <T, R> R resolve(String d, Object... args) {
-        if (dictionaryDependency.containsKey(d)) {
-            Function<Object, Object> resolvedStrategy = dictionaryDependency.get(d);
-            if (resolvedStrategy != null) {
-                // Развертываем массив аргументов
-                R result = null;
-                for (Object arg : args) {
-                    result = (R) resolvedStrategy.apply(arg); // Предполагаем, что второй аргумент не используется
-                    break; // Добавил break, чтобы гарантировать, что resolve вызывается только один раз
-                }
-                return result;
-            }
-        }
-        throw new IllegalArgumentException("Dependency " + d + " is not found.");
-    }
-}
 
 /*public class IoC {
 

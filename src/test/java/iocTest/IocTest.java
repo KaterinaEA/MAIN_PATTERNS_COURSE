@@ -1,5 +1,6 @@
 package iocTest;
 
+import exceptionModule1L3.AddQueue;
 import exceptionModule1L3.ICommand;
 import iocModule2L1.CommandMove;
 import iocModule2L1.Init;
@@ -19,7 +20,6 @@ public class IocTest {
         init.init();
 
         CommandMove move = IoC.resolve("CommandMove");
-
         move.execute();
 
     }
@@ -35,9 +35,9 @@ public class IocTest {
 
         CommandMove move = IoC.resolve("CommandMove");
 
-        //AddQueue addQueue = IoC.resolve("AddQueue", q, move);
+        AddQueue addQueue = IoC.resolve("AddQueue", q, move);
 
-        //addQueue.execute();
+        addQueue.execute();
 
     }
 
