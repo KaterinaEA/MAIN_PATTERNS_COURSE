@@ -15,7 +15,7 @@ public class TestSolve {
         double c = 1.0;
         double[] result;
 
-        result = tdd_module.Solve.calcQuadraticEquation(a, b, c);
+        result = tddModule1L1.Solve.calcQuadraticEquation(a, b, c);
 
         assertEquals("Для уравнения x^2+1 = 0 корней нет (возвращается пустой массив)", 0.0, result[0]);
         assertEquals("Для уравнения x^2+1 = 0 корней нет (возвращается пустой массив)", 0.0, result[1]);
@@ -36,7 +36,7 @@ public class TestSolve {
 
         double[] result;
 
-        result = tdd_module.Solve.calcQuadraticEquation(a, b, c);
+        result = tddModule1L1.Solve.calcQuadraticEquation(a, b, c);
 
         assertEquals(exceptedX1, result[0], e);
         assertEquals(exceptedX2, result[1], e);
@@ -56,7 +56,7 @@ public class TestSolve {
 
         double[] result;
 
-        result = tdd_module.Solve.calcQuadraticEquation(a, b, c);
+        result = tddModule1L1.Solve.calcQuadraticEquation(a, b, c);
 
         assertEquals(exceptedx1, result[0], e);
         assertEquals(exceptedx1, result[1], e);
@@ -71,7 +71,7 @@ public class TestSolve {
         double c = 1.0;
         double[] result;
 
-        result = tdd_module.Solve.calcQuadraticEquation(a, b, c);//Main.main(null);
+        result = tddModule1L1.Solve.calcQuadraticEquation(a, b, c);//Main.main(null);
 
         assertFalse(result[0] == result[1]);
 
@@ -85,7 +85,7 @@ public class TestSolve {
         double c = 1.0;
         double[] result;
 
-        result = tdd_module.Solve.calcQuadraticEquation(a, b, c);//Main.main(null);
+        result = tddModule1L1.Solve.calcQuadraticEquation(a, b, c);//Main.main(null);
 
         assertEquals("A = 0", 0.0, result[0]);
         assertEquals("A = 0", 0.0, result[1]);
@@ -100,7 +100,7 @@ public class TestSolve {
         double c = 0.0;
         double[] result;
 
-        result = tdd_module.Solve.calcQuadraticEquation(a, b, c);//Main.main(null);
+        result = tddModule1L1.Solve.calcQuadraticEquation(a, b, c);//Main.main(null);
 
         assertEquals("Коэффициенты = 0", 0.0, result[0]);
         assertEquals("Коэффициенты = 0", 0.0, result[1]);
