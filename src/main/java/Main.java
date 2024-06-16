@@ -1,14 +1,33 @@
-import exceptionModule1L3.CommandProcessor;
+import exceptionModule1L3.AddQueue;
 import exceptionModule1L3.ICommand;
-import lspIspModule1L2.move.IMovable;
-import lspIspModule1L2.move.Move;
-import lspIspModule1L2.move.Vector;
-import lspIspModule1L2.rotate.Rotate;
+import exceptionModule1L3.Retry;
+import iocModule2L1.CommandMove;
+import iocModule2L1.Init;
+import iocModule2L1.IoC;
+
+import java.util.Queue;
+
 
 public class Main {
     public static void main(String[] args) {
 
-        //ICommand[] command = {new Move(), new Rotate()};
+        Init init = new Init();
+
+        init.init();
+
+        CommandMove move = IoC.resolve("CommandMove");
+
+        move.execute();
+
+        Queue<ICommand> queueCommands = IoC.resolve("QueueCommand");
+
+        Retry retry = IoC.resolve("Retry", move);
+
+        retry.execute();
+
+        AddQueue addQueue = IoC.resolve("AddQueue", queueCommands, move);
+
+        addQueue.execute();
 
     }
 
