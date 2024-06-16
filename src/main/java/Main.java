@@ -20,6 +20,7 @@ public class Main {
         move.execute();
 
         Queue<ICommand> queueCommands = IoC.resolve("QueueCommand");
+
         Retry retry = IoC.resolve("Retry", move);
 
         retry.execute();
