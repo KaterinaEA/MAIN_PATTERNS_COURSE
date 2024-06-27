@@ -17,19 +17,19 @@ import java.util.function.Function;
  * Метод проверяет, есть ли в карте strategy запись с ключом dependency. Если да, то метод Resolve<R> возвращает объект типа R, который хранится в карте strategy. В противном случае метод Resolve<R> генерирует исключение ArgumentException.
  */
 public class IoC {
-    private static final Map<String, Object> dictionaryDependency = new HashMap<>();
+    public static final Map<String, Function<Object[], Object>> dictionaryDependency = new HashMap<>();
 
-    public static void register(String dependency, Object strategy) {
+    public static void register(String dependency, Function<Object[], Object> strategy) {
         dictionaryDependency.put(dependency, strategy);
     }
 
-    public static <R> R resolve(String d, Object... args) {
+    public static <T> T resolve(String d, Object... args) {
 
         if (dictionaryDependency.containsKey(d)) {
 
                 Object resolvedStrategy = dictionaryDependency.get(d);
-                Function<Object[], R> functionArray = (Function<Object[], R>) resolvedStrategy;
-                return functionArray.apply(args);
+                Function<Object[], Object> functionArray = (Function<Object[], Object>) resolvedStrategy;
+                return (T) functionArray.apply(args);
 
         }
         throw new IllegalArgumentException("Dependency " + d + " is not found.");

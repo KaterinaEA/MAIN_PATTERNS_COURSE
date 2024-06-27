@@ -12,12 +12,15 @@ import java.util.Queue;
 
 public class IocTest {
 
-    @Test
-    public void testIoCResolveStrategy(){
+    public IocTest(){
 
         Init init = new Init();
-
         init.init();
+
+    }
+
+    @Test
+    public void testIoCResolveStrategy(){
 
         CommandMove move = IoC.resolve("CommandMove");
         move.execute();
@@ -26,10 +29,6 @@ public class IocTest {
 
     @Test
     public void testIoCResolveStrategyWithArgs(){
-
-        Init init = new Init();
-
-        init.init();
 
         Queue<ICommand> q = IoC.resolve("QueueCommand");
 
@@ -43,10 +42,6 @@ public class IocTest {
 
     @Test(expected = Exception.class)
     public void testIoCResolveStrategyException() {
-
-        Init init = new Init();
-
-        init.init();
 
         CommandMove move = IoC.resolve("CommandMove1");
 
