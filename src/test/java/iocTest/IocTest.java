@@ -6,6 +6,7 @@ import iocModule2L1.CommandMove;
 import iocModule2L1.Init;
 import iocModule2L1.IoC;
 import org.junit.Test;
+import iocModule2L1.*;
 
 import java.util.Queue;
 
@@ -20,30 +21,30 @@ public class IocTest {
     }
 
     @Test
-    public void testIoCResolveStrategy(){
+    public void testIoCresolveStrategy(){
 
-        CommandMove move = IoC.resolve("CommandMove");
+        CommandMove move = IoC.resolve_old("CommandMove");
         move.execute();
 
     }
 
     @Test
-    public void testIoCResolveStrategyWithArgs(){
+    public void testIoCresolveStrategyWithArgs(){
 
-        Queue<ICommand> q = IoC.resolve("QueueCommand");
+        Queue<ICommand> q = IoC.resolve_old("QueueCommand");
 
-        CommandMove move = IoC.resolve("CommandMove");
+        CommandMove move = IoC.resolve_old("CommandMove");
 
-        AddQueue addQueue = IoC.resolve("AddQueue", q, move);
+        AddQueue addQueue = IoC.resolve_old("AddQueue", q, move);
 
         addQueue.execute();
 
     }
 
     @Test(expected = Exception.class)
-    public void testIoCResolveStrategyException() {
+    public void testIoCresolveStrategyException() {
 
-        CommandMove move = IoC.resolve("CommandMove1");
+        CommandMove move = IoC.resolve_old("CommandMove1");
 
         move.execute();
 

@@ -29,10 +29,10 @@ public class Init {
 
         IoC.register("IoC.registry", functionRegister);
 
-        IoC.resolve("IoC.registry", "CommandMove", functionMove);
-        IoC.resolve("IoC.registry","QueueCommand", supplierQueue);
-        IoC.resolve("IoC.registry","Retry", functionRetry);
-        IoC.resolve("IoC.registry","AddQueue", biFunctionAddQueue);
+        IoC.resolve_old("IoC.registry", "CommandMove", functionMove);
+        IoC.resolve_old("IoC.registry","QueueCommand", supplierQueue);
+        IoC.resolve_old("IoC.registry","Retry", functionRetry);
+        IoC.resolve_old("IoC.registry","AddQueue", biFunctionAddQueue);
 
     }
 }

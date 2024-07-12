@@ -1,9 +1,13 @@
 package iocModule2L1;
 
+import iocModule2L1.Scope.DependencyResolver;
+import iocModule2L1.Scope.InitCommand;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -23,7 +27,7 @@ public class IoC {
         dictionaryDependency.put(dependency, strategy);
     }
 
-    public static <T> T resolve(String d, Object... args) {
+    public static <T> T resolve_old(String d, Object... args) {
 
         if (dictionaryDependency.containsKey(d)) {
 
@@ -32,6 +36,31 @@ public class IoC {
                 return (T) functionArray.apply(args);
 
         }
-        throw new IllegalArgumentException("Dependency " + d + " is not found.");
+        throw new IllegalArgumentException(String.format("Dependency %s is not found.", d));
     }
+
+    static BiFunction<String, Object[], Object> strategy =
+            (d, args) -> {
+
+                Object scope = InitCommand.currentScopes.get() != null ? InitCommand.currentScopes.get() : InitCommand.rootScope;
+                DependencyResolver dependencyResolver = new DependencyResolver((HashMap<String, Function<Object[], Object>>)scope);
+
+                return dependencyResolver.resolve(d, args);
+            };
+
+    public static <T> T resolve (String d, Object... args) {
+
+            return (T) strategy.apply(d, args);
+
+    }
+/*
+            (args) -> {
+                    if ("Update Ioc Resolve Dependency Strategy".equals(args[0])) {
+                    Function<Function<String, Object>, Function<String, Object>> updateStrategy =
+        (Function<Function<String, Object>, Function<String, Object>>) args[1];
+        return new UpdateIocResolveDependencyStrategyCommand[]{new UpdateIocResolveDependencyStrategyCommand((Function<Function<String, Object[]>, Function<String, Object>>) updateStrategy)};
+        } else {
+        throw new IllegalArgumentException(String.format("Dependency %s is not found.", args[0]));
+        }*/
+
 }

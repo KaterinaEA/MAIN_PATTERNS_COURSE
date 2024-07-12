@@ -9,8 +9,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 
 public class InitCommand implements ICommand {
-    static final ThreadLocal<Object> currentScopes = new ThreadLocal<>();
-    private static final ConcurrentMap<String, Function<Object[], Object>> rootScope = new ConcurrentHashMap<>();
+    public static final ThreadLocal<Object> currentScopes = new ThreadLocal<>();
+    public static final HashMap<String, Function<Object[], Object>> rootScope = new HashMap<>();
     private static boolean alreadyExecutesSuccessfully = false;
 
     public void execute() {
@@ -29,11 +29,11 @@ public class InitCommand implements ICommand {
                     throw new RuntimeException(e);
                 }
             });
-            rootScope.put("IoC.Scope.Create.Empty", (args) -> new ConcurrentHashMap<String, Function<String, Object>>());
+            rootScope.put("IoC.Scope.Create.Empty", (args) -> new HashMap<String, Function<Object[], Object>>());
             rootScope.put("IoC.Scope.Create",
                     (args) -> {
-                        ConcurrentHashMap<String, Function<Object[], Object>> creatingScope =
-                                (ConcurrentHashMap<String, Function<Object[], Object>>) IoC.resolve("IoC.Scope.Create.Empty");
+                        HashMap<String, Function<Object[], Object>> creatingScope =
+                                (HashMap<String, Function<Object[], Object>>) IoC.resolve("IoC.Scope.Create.Empty");
 
                         if (args.length > 0) {
                             Object parentScope = args[0];
