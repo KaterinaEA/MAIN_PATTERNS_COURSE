@@ -19,7 +19,7 @@ public class ScopeTest {
 
         IoC.resolve("IoC.Scope.New", "ScopeId_1");
 
-        IoC.resolve("IoC.Scope.Current.Set", "ScopeId_2");
+        IoC.resolve("IoC.Scope.Current.Set", "ScopeId_1");
 
     }
 
