@@ -4,8 +4,6 @@ import exceptionModule1L3.ICommand;
 import iocModule2L1.IoC;
 
 import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 
 public class InitCommand implements ICommand {
@@ -33,7 +31,7 @@ public class InitCommand implements ICommand {
             rootScope.put("IoC.Scope.Create",
                     (args) -> {
                         HashMap<String, Function<Object[], Object>> creatingScope =
-                                (HashMap<String, Function<Object[], Object>>) IoC.resolve("IoC.Scope.Create.Empty");
+                                IoC.resolve("IoC.Scope.Create.Empty");
 
                         if (args.length > 0) {
                             Object parentScope = args[0];
@@ -44,7 +42,7 @@ public class InitCommand implements ICommand {
                         }
                         return creatingScope;
                     });
-            rootScope.put("IoC.register", (args) -> new RegisterDependencyCommand((String) args[0], (RegisterDependencyCommand.FuncDependencyResolverStrategy) args[1]));
+            rootScope.put("IoC.register", (args) -> new RegisterDependencyCommand((String) args[0], (Function<Object[], Object>) args[1]));
 
             alreadyExecutesSuccessfully = true;
         }

@@ -20,7 +20,7 @@ public class ScopeTest {
 
         HashMap<String, Function<Object[], Object>> iocScope = IoC.resolve("IoC.Scope.Create");
 
-        IoC.resolve("IoC.Scope.Current.Set", iocScope, initCommand.rootScope);
+        IoC.resolve("IoC.Scope.Current.Set", iocScope);
 
     }
 
@@ -32,7 +32,7 @@ public class ScopeTest {
         CommandMove move = IoC.resolve("CommandMove");
         move.execute();
 
-        //assertEquals("Вернул объект класса CommandMove", CommandMove.class, move);
+        assertEquals("Вернул объект класса CommandMove", CommandMove.class, move.getClass());
 
     }
 

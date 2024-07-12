@@ -4,24 +4,25 @@ import exceptionModule1L3.ICommand;
 import iocModule2L1.IoC;
 
 import java.util.HashMap;
+import java.util.function.Function;
 
 public class RegisterDependencyCommand implements ICommand {
-    private String _dependency;
-    private FuncDependencyResolverStrategy _dependencyResolverStrategy;
+    private final String _dependency;
+    private final Function<Object[], Object> _dependencyResolverStrategy;
 
-    public RegisterDependencyCommand(String dependency, FuncDependencyResolverStrategy dependencyResolverStrategy) {
+    public RegisterDependencyCommand(String dependency, Function<Object[], Object> dependencyResolverStrategy) {
+
         _dependency = dependency;
         _dependencyResolverStrategy = dependencyResolverStrategy;
+        HashMap<String, Function<Object[], Object>> currentScope = IoC.resolve("IoC.Scope.Current");
+        currentScope.put(dependency, dependencyResolverStrategy);
+
     }
 
     @Override
     public void execute() {
-        HashMap<String, FuncDependencyResolverStrategy> currentScope = IoC.resolve("IoC.Scope.Current");
+        HashMap<String, Function<Object[], Object>> currentScope = IoC.resolve("IoC.Scope.Current");
         currentScope.put(_dependency, _dependencyResolverStrategy);
     }
 
-    // Интерфейс FuncDependencyResolverStrategy для поддержки стратегий разрешения зависимостей
-    public interface FuncDependencyResolverStrategy {
-        Object resolve(String dependency, Object[] args);
-    }
 }
