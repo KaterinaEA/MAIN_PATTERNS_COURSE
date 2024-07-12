@@ -9,6 +9,7 @@ import java.util.function.Function;
 public class InitCommand implements ICommand {
     public static final ThreadLocal<Object> currentScopes = new ThreadLocal<>();
     public static final HashMap<String, Function<Object[], Object>> rootScope = new HashMap<>();
+    public static HashMap<String, HashMap<String, Function<Object[], Object>>> dictionaryScope = new HashMap<>();
     private static boolean alreadyExecutesSuccessfully = false;
 
     public void execute() {
@@ -17,31 +18,20 @@ public class InitCommand implements ICommand {
         }
 
         synchronized (rootScope) {
-            rootScope.put("IoC.Scope.Current.Set", (args) -> new SetCurrentScopeCommand(args[0]));
-            rootScope.put("IoC.Scope.Current.Clear", (args) -> new ClearCurrentScopeCommand());
-            rootScope.put("IoC.Scope.Current", (args) -> currentScopes.get() != null ? currentScopes.get() : rootScope);
-            rootScope.put("IoC.Scope.Parent", (args) -> {
-                try {
-                    throw new Exception("The root scope has no a parent scope.");
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            rootScope.put("IoC.Scope.Create.Empty", (args) -> new HashMap<String, Function<Object[], Object>>());
-            rootScope.put("IoC.Scope.Create",
-                    (args) -> {
-                        HashMap<String, Function<Object[], Object>> creatingScope =
-                                IoC.resolve("IoC.Scope.Create.Empty");
+            rootScope.put("IoC.Scope.Current.Set"   , (args) -> new SetCurrentScopeCommand(args[0]));
+            rootScope.put("IoC.Scope.Current.Clear" , (args) -> new ClearCurrentScopeCommand());
+            rootScope.put("IoC.Scope.Current"       , (args) -> currentScopes.get() != null ? currentScopes.get() : rootScope);
+            rootScope.put("IoC.Scope.New"           , (args) -> {
 
-                        if (args.length > 0) {
-                            Object parentScope = args[0];
-                            creatingScope.put("IoC.Scope.Parent", (params) -> parentScope);
-                        } else {
-                            Object parentScope = IoC.resolve("IoC.Scope.Current");
-                            creatingScope.put("IoC.Scope.Parent", (params) -> parentScope);
-                        }
-                        return creatingScope;
+                    HashMap<String, Function<Object[], Object>> newScope = new HashMap<>();
+                    HashMap<String, HashMap<String, Function<Object[], Object>>> dictiScope = InitCommand.dictionaryScope;
+                    dictiScope.put((String) args[0], newScope);
+                    return newScope;
+
                     });
+
+            rootScope.put("IoC.Scope.New", (args) -> new HashMap<String, Function<Object[], Object>>());
+
             rootScope.put("IoC.register", (args) -> new RegisterDependencyCommand((String) args[0], (Function<Object[], Object>) args[1]));
 
             alreadyExecutesSuccessfully = true;

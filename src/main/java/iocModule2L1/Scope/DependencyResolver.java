@@ -19,14 +19,19 @@ public class DependencyResolver implements IDependencyResolver{
 
         HashMap<String, Function<Object[], Object>> dependencies = _dependencies;
 
-        while(true) {
 
             Function<Object[], Object> dependencyResolverStrategy = dependencies.get(dependency);
 
             if (dependencies.containsKey(dependency)) {
                 return dependencyResolverStrategy.apply(args);
             }
-        }
+            else {
+                dependencies = InitCommand.rootScope;
+                if (dependencies.containsKey(dependency)) {
+                    return dependencyResolverStrategy.apply(args);
+                }
+            }
+        throw new IllegalArgumentException(String.format("Dependency %s is not found.", dependency));
 
     }
 }

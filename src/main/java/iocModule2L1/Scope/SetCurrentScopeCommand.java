@@ -6,7 +6,8 @@ public class SetCurrentScopeCommand implements ICommand {
     private Object _scope;
 
     public SetCurrentScopeCommand(Object scope) {
-        _scope = scope;
+        _scope = InitCommand.dictionaryScope.getOrDefault(scope, InitCommand.rootScope);
+        InitCommand.currentScopes.set(_scope);
     }
 
     @Override

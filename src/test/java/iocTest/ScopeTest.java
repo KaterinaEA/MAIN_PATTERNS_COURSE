@@ -5,7 +5,6 @@ import iocModule2L1.IoC;
 import iocModule2L1.Scope.InitCommand;
 import org.junit.Test;
 
-import java.util.HashMap;
 import java.util.function.Function;
 
 import static junit.framework.TestCase.assertEquals;
@@ -18,14 +17,14 @@ public class ScopeTest {
 
         initCommand.execute();
 
-        HashMap<String, Function<Object[], Object>> iocScope = IoC.resolve("IoC.Scope.Create");
+        IoC.resolve("IoC.Scope.New", "ScopeId_1");
 
-        IoC.resolve("IoC.Scope.Current.Set", iocScope);
+        IoC.resolve("IoC.Scope.Current.Set", "ScopeId_2");
 
     }
 
     @Test
-    public void testScope() {
+    public void testRegister() {
 
         Function<Object[], Object> functionMove         = (args) -> new CommandMove ();
         IoC.resolve("IoC.register", "CommandMove", functionMove);
@@ -34,6 +33,12 @@ public class ScopeTest {
 
         assertEquals("Вернул объект класса CommandMove", CommandMove.class, move.getClass());
 
+    }
+
+    @Test(expected = Exception.class)
+    public void testGetExceptionWhenNotDependency() {
+        CommandMove move = IoC.resolve("CommandMove");
+        move.execute();
     }
 
 }
