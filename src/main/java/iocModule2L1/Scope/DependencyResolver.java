@@ -27,6 +27,7 @@ public class DependencyResolver implements IDependencyResolver{
             }
             else {
                 dependencies = InitCommand.rootScope;
+                dependencyResolverStrategy = dependencies.get(dependency);
                 if (dependencies.containsKey(dependency)) {
                     return dependencyResolverStrategy.apply(args);
                 }
