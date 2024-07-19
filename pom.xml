@@ -63,4 +63,33 @@
 
   </dependencies>
 
+    <build>
+        <plugins>
+            <!-- Плагин для выполнения задачи -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>your-task-id</id>
+                        <!-- Здесь вы можете указать конфигурацию для вашей задачи -->
+                        <configuration>
+                            <!-- Конфигурация вашей задачи -->
+                            <target>
+                                <!-- Здесь вы можете написать Ant скрипт для выполнения вашей задачи -->
+                                <echo message="This is your task!" />
+                            </target>
+                        </configuration>
+                        <phase>validate</phase>
+                        <!-- Здесь вы можете указать жизненный цикл, когда будет выполняться ваша задача -->
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
