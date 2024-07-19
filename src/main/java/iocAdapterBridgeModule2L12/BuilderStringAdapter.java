@@ -20,23 +20,24 @@ public class BuilderStringAdapter {
 
 
         code.append("package ").append(packageName).append(";\n\n");
-        code.append("import iocModule2L1.IoC;\n");
-        code.append(String.format("import %s;\n", className));
+        code.append("import iocModule2L1.IoC;\n\n");
+        code.append(String.format("import %s;\n\n", className));
 
         for (Method method : methods) {
 
             Type returnType = method.getGenericReturnType();
             String returnTypeString = returnType.getTypeName();
 
-            if (returnTypeString != "void") {
-                code.append(String.format(" import %s;\n", returnTypeString));
+            if (!returnTypeString.equals("void")) {
+                code.append(String.format("import %s;\n\n", returnTypeString));
             }
+
 
         }
 
-        code.append(String.format("public class %sAdapter implements I%s {\n", baseName, baseName));
-        code.append("private final Uobject _obj;\n");
-        code.append(String.format("public %sAdapter (Uobject uObj) {_obj = uObj;}\n", baseName));
+        code.append(String.format("public class %sAdapter implements I%s, InMemoryClass {\n\n", baseName, baseName));
+        code.append("private final Uobject _obj;\n\n");
+        code.append(String.format("public %sAdapter (Uobject uObj) {_obj = uObj;}\n\n", baseName));
 
         // Перебираем каждый метод
         for (Method method : methods) {
@@ -45,7 +46,7 @@ public class BuilderStringAdapter {
             String returnTypeString = returnType.getTypeName();
             String commaIfParamNotNull = "";
 
-            Integer idx = returnTypeString.lastIndexOf('.')+1;
+            int idx = returnTypeString.lastIndexOf('.')+1;
 
             String returnTypeStringShort = returnTypeString.substring(idx);
 
@@ -72,7 +73,7 @@ public class BuilderStringAdapter {
                 //System.out.println("Тип параметра: " + parameterType + ", Наименование параметра: " + parameterName);
             }
 
-            if (returnTypeString != "void") {
+            if (!returnTypeString.equals("void")) {
                 returnStr = "return";
             } else{
                 returnStr = "";
@@ -94,6 +95,12 @@ public class BuilderStringAdapter {
                     ));
 
         }
+
+        code.append("   @Override\n"
+                + "     public void runCode() {\n"
+                + String.format("        System.out.println(\" %s code is running...\");\n", className)
+                + "    }\n"
+                + "}\n" );
 
         return code.toString();
     }

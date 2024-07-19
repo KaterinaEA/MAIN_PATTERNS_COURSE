@@ -8,12 +8,17 @@ import java.nio.file.Path;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CodeGenerator {
     public static void main() throws Exception {
         File sourceDir = new File("src/main/java");
-        List<File> javaFiles = Files.walk(sourceDir.toPath()).filter(path -> path.toString().endsWith(".java")).map(Path::toFile).collect(Collectors.toList());
-
+        List<File> javaFiles = new ArrayList<>();
+        try (Stream<Path> paths = Files.walk(sourceDir.toPath())) {
+            paths.filter(path -> path.toString().endsWith(".java"))
+                    .map(Path::toFile)
+                    .forEach(javaFiles::add);
+        }
         for (File file : javaFiles) {
             if (isInterfaceClass(file)) {
                 System.out.println(file.getParentFile());
@@ -22,7 +27,7 @@ public class CodeGenerator {
         }
     }
 
-    private static boolean isInterfaceClass(File file) {
+    public static boolean isInterfaceClass(File file) {
 
         Set<String> excludedFiles = new HashSet<>();
         excludedFiles.add("Init.java");
@@ -30,6 +35,7 @@ public class CodeGenerator {
         excludedFiles.add("InitCommand.java");
         excludedFiles.add("IDependencyResolver.java");
         excludedFiles.add("ICommand.java");
+        excludedFiles.add("InMemoryClass");
 
         String fileName = file.getName();
 
@@ -53,15 +59,12 @@ public class CodeGenerator {
         // Извлекаем подстроку после индекса "\java" до конца пути
         String className = classNameFull.substring(index+6);
 
-        // Заменяем / на .
-        String classNameWithReplace = className.replace("\\", ".");
-
-        return classNameWithReplace;
+        return className.replace("\\", ".");
 
     }
 
     private static void generateAdapter(File file) throws Exception {
-        String returnStr = "";
+        String returnStr;
 
         // Получаем имя исходного файла без расширения
         String baseName = file.getName().substring(1, file.getName().lastIndexOf('.'));
@@ -95,7 +98,7 @@ public class CodeGenerator {
                 Type returnType = method.getGenericReturnType();
                 String returnTypeString = returnType.getTypeName();
 
-                if (returnTypeString != "void") {
+                if (!returnTypeString.equals("void")) {
                     writer.println(String.format(" import %s;", returnTypeString));
                     writer.println();
                 }
@@ -116,7 +119,7 @@ public class CodeGenerator {
                 String returnTypeString = returnType.getTypeName();
                 String commaIfParamNotNull = "";
 
-                Integer idx = returnTypeString.lastIndexOf('.')+1;
+                int idx = returnTypeString.lastIndexOf('.')+1;
 
                 String returnTypeStringShort = returnTypeString.substring(idx);
                 //System.out.println("Тип возвращаемого значения: " + returnType);
@@ -147,12 +150,11 @@ public class CodeGenerator {
                     //System.out.println("Тип параметра: " + parameterType + ", Наименование параметра: " + parameterName);
                 }
 
-                if (returnTypeString != "void") {
+                if (!returnTypeString.equals("void")) {
                     returnStr = "return";
                 } else{
                     returnStr = "";
                 }
-                ;
 
                 if (!paramListName.isEmpty()) {
                     commaIfParamNotNull = " , ";
