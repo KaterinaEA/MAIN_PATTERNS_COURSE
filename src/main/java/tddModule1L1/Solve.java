@@ -1,4 +1,4 @@
-package tdd_module;
+package tddModule1L1;
 
 public class Solve {
 
