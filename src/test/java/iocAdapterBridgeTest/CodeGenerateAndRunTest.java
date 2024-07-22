@@ -2,11 +2,10 @@ package iocAdapterBridgeTest;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
-import iocAdapterBridgeModule2L12.BuilderStringAdapter;
-import iocAdapterBridgeModule2L12.InMemoryClass;
-import iocAdapterBridgeModule2L12.InMemoryFileManager;
-import iocAdapterBridgeModule2L12.JavaSourceFromString;
+import iocAdapterBridgeModule2L12.*;
+import lspIspModule1L2.move.IMovable;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
 
 import javax.tools.DiagnosticCollector;
@@ -15,6 +14,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.ToolProvider;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class CodeGenerateAndRunTest {
     }
 
     @Test
-    public void whenStringIsCompiled_ThenCodeShouldExecute() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
+    public void whenStringIsCompiled_ThenCodeShouldExecute() throws ClassNotFoundException, InstantiationException, IllegalAccessException, IOException, NoSuchMethodException, InvocationTargetException {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
         InMemoryFileManager manager = new InMemoryFileManager(compiler.getStandardFileManager(null, null, null));
@@ -47,7 +47,7 @@ public class CodeGenerateAndRunTest {
         for (File file : javaFiles) {
             if (file.getName().equals("IMovable.java")) {
                 sourceCode = BuilderStringAdapter.getSourceCode(file);
-                //System.out.println(BuilderStringAdapter.getSourceCode(file));
+                System.out.println(BuilderStringAdapter.getSourceCode(file));
             }
         }
 
@@ -64,7 +64,10 @@ public class CodeGenerateAndRunTest {
         } else {
             ClassLoader classLoader = manager.getClassLoader(null);
             Class<?> clazz = classLoader.loadClass(qualifiedClassName);
-            InMemoryClass instanceOfClass = (InMemoryClass) clazz.newInstance();
+
+            Uobject uobject = Mockito.mock(Uobject.class);
+
+            InMemoryClass instanceOfClass = (InMemoryClass) clazz.getDeclaredConstructor().newInstance();
 
             //Assertions.assertInstanceOf(InMemoryClass.class, instanceOfClass);
 
