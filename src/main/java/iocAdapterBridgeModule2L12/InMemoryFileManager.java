@@ -6,11 +6,14 @@ import java.util.Map;
 
 public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManager> {
 
-    private Map<String, JavaClassAsBytes> compiledClasses;
+    private final Map<String, JavaClassAsBytes> compiledClasses;
+
+    private final ClassLoader loader;
 
     public InMemoryFileManager(StandardJavaFileManager standardManager) {
         super(standardManager);
         this.compiledClasses = new Hashtable<>();
+        this.loader = new InMemoryClassLoader(this.getClass().getClassLoader(), this);
     }
 
     @Override
@@ -26,4 +29,11 @@ public class InMemoryFileManager extends ForwardingJavaFileManager<JavaFileManag
     public Map<String, JavaClassAsBytes> getBytesMap() {
         return compiledClasses;
     }
+
+    @Override
+    public ClassLoader getClassLoader(Location location) {
+        return loader;
+    }
+
+
 }
