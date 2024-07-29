@@ -3,7 +3,6 @@ package iocAdapterBridgeTest;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import iocAdapterBridgeModule2L12.*;
-import lspIspModule1L2.move.IMovable;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
@@ -64,14 +63,20 @@ public class CodeGenerateAndRunTest {
         } else {
             ClassLoader classLoader = manager.getClassLoader(null);
             Class<?> clazz = classLoader.loadClass(qualifiedClassName);
-
             Uobject uobject = Mockito.mock(Uobject.class);
+            InMemoryClass instanceOfClass = (InMemoryClass) clazz.getDeclaredConstructor(Uobject.class).newInstance(uobject);
 
-            InMemoryClass instanceOfClass = (InMemoryClass) clazz.getDeclaredConstructor().newInstance();
+            // TODO удалить просле проверки
+            //InMemoryClass instanceOfClass = (InMemoryClass) clazz.newInstance();
 
+            // TODO разобраться почему не срабатывает
             //Assertions.assertInstanceOf(InMemoryClass.class, instanceOfClass);
 
             instanceOfClass.runCode();
+
+            // TODO удалить просле проверки
+            //MovableAdapter_Test movableAdapter = new MovableAdapter_Test(uobject);
+            //movableAdapter.runCode();
         }
     }
 

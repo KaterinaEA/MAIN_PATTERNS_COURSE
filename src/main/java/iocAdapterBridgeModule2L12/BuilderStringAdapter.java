@@ -36,7 +36,7 @@ public class BuilderStringAdapter {
         }
 
         code.append(String.format("public class %sAdapter implements I%s, InMemoryClass {\n\n", baseName, baseName));
-        code.append("private final Uobject _obj;\n\n");
+        code.append("public final Uobject _obj;\n\n");
         code.append(String.format("public %sAdapter (Uobject uObj) {_obj = uObj;}\n\n", baseName));
 
         // Перебираем каждый метод
@@ -85,6 +85,7 @@ public class BuilderStringAdapter {
 
             code.append(
                     String.format(" public %s %s(%s) {%s IoC.resolve(\"%s.%s\", _obj %s);}\n\n"
+                    //String.format(" public %s %s(%s) {%s IoC.resolve(\"%s.%s\");}\n\n"
                             , returnTypeStringShort
                             , methodSignature
                             , String.join(",", paramList)
@@ -96,11 +97,11 @@ public class BuilderStringAdapter {
 
         }
 
-        code.append("   @Override\n"
-                + "     public void runCode() {\n"
-                + String.format("        System.out.println(\" %s code is running...\");\n", className)
-                + "    }\n"
-                + "}\n" );
+        code.append("   @Override\n");
+        code.append("     public void runCode() {\n");
+        code.append( String.format("        System.out.println(\" %sAdapter code is running...\");\n", className));
+        code.append("    }\n");
+        code.append("}\n" );
 
         return code.toString();
     }
