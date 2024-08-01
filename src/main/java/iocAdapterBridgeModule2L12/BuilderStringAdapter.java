@@ -18,7 +18,6 @@ public class BuilderStringAdapter {
 
         StringBuilder code = new StringBuilder();
 
-
         code.append("package ").append(packageName).append(";\n\n");
         code.append("import iocModule2L1.IoC;\n\n");
         code.append(String.format("import %s;\n\n", className));
@@ -31,7 +30,6 @@ public class BuilderStringAdapter {
             if (!returnTypeString.equals("void")) {
                 code.append(String.format("import %s;\n\n", returnTypeString));
             }
-
 
         }
 

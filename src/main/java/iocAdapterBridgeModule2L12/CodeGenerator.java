@@ -1,14 +1,24 @@
 package iocAdapterBridgeModule2L12;
 
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import org.slf4j.LoggerFactory;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.ToolProvider;
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.nio.file.Path;
 import java.nio.file.Files;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class CodeGenerator {
     public static void main() throws Exception {
@@ -35,7 +45,9 @@ public class CodeGenerator {
         excludedFiles.add("InitCommand.java");
         excludedFiles.add("IDependencyResolver.java");
         excludedFiles.add("ICommand.java");
-        excludedFiles.add("InMemoryClass");
+        excludedFiles.add("InMemoryClass.java");
+        excludedFiles.add("InMemoryClassLoader.java");
+        excludedFiles.add("InMemoryFileManager.java");
 
         String fileName = file.getName();
 
@@ -45,8 +57,11 @@ public class CodeGenerator {
 
         return false;
     }
-
-    public static String getClassName(File file) throws ClassNotFoundException {
+    private static Logger getLogger(File file) throws ClassNotFoundException {
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        return loggerContext.getLogger(CodeGenerator.getClassName(file));
+    }
+    public static String getClassName(File file) {
 
         // Путь к файлу класса
         String classFilePath = file.getPath();
@@ -61,6 +76,50 @@ public class CodeGenerator {
 
         return className.replace("\\", ".");
 
+    }
+
+    public static List<File> SearchInterface () throws IOException {
+        File sourceDir = new File("src/main/java");
+        List<File> javaFiles = new ArrayList<>();
+        try (Stream<Path> paths = Files.walk(sourceDir.toPath())) {
+            paths.filter(path -> path.toString().endsWith(".java"))
+                    .map(Path::toFile)
+                    .forEach(javaFiles::add);
+        }
+        return javaFiles;
+    }
+
+
+    public static InMemoryClass typeOf(File file, Uobject uobject) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
+        InMemoryFileManager manager = new InMemoryFileManager(compiler.getStandardFileManager(null, null, null));
+
+        String sourceCode = BuilderStringAdapter.getSourceCode(file);
+        String qualifiedClassName = String.format("iocAdapterBridgeModule2L12.%sAdapter", file.getName().substring(1, file.getName().lastIndexOf('.')));
+
+        List<JavaFileObject> sourceFiles = Collections.singletonList(new JavaSourceFromString(qualifiedClassName, sourceCode));
+
+        JavaCompiler.CompilationTask task = compiler.getTask(null, manager, diagnostics, null, null, sourceFiles);
+
+        boolean result = task.call();
+
+        if (!result) {
+            diagnostics.getDiagnostics().forEach(d -> {
+                try {
+                    getLogger(file).error(String.valueOf(d));
+                } catch (ClassNotFoundException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        } else {
+            ClassLoader classLoader = manager.getClassLoader(null);
+            Class<?> clazz = classLoader.loadClass(qualifiedClassName);
+
+            return (InMemoryClass) clazz.getDeclaredConstructor(Uobject.class).newInstance(uobject);
+        }
+        return null;
     }
 
     private static void generateAdapter(File file) throws Exception {
