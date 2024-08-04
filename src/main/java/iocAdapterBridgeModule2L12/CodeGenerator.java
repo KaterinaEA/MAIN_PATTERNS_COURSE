@@ -90,7 +90,7 @@ public class CodeGenerator {
     }
 
 
-    public static InMemoryClass typeOf(File file, Uobject uobject) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public static <T> T typeOf(File file, Uobject uobject) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
 
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
@@ -117,7 +117,7 @@ public class CodeGenerator {
             ClassLoader classLoader = manager.getClassLoader(null);
             Class<?> clazz = classLoader.loadClass(qualifiedClassName);
 
-            return (InMemoryClass) clazz.getDeclaredConstructor(Uobject.class).newInstance(uobject);
+            return (T) clazz.getDeclaredConstructor(Uobject.class).newInstance(uobject);
         }
         return null;
     }
@@ -235,7 +235,7 @@ public class CodeGenerator {
             writer.println("}");
         }
         // Выводим сообщение о том, что адаптер сгенерирован
-        System.out.println(String.format("Адаптер сгенерирован для %s", file.getName()));
+        //System.out.println(String.format("Адаптер сгенерирован для %s", file.getName()));
     }
 
 

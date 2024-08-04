@@ -82,8 +82,7 @@ public class BuilderStringAdapter {
             }
 
             code.append(
-                    String.format(" public %s %s(%s) {%s IoC.resolve(\"%s.%s\", _obj %s);}\n\n"
-                    //String.format(" public %s %s(%s) {%s IoC.resolve(\"%s.%s\");}\n\n"
+                    String.format(" public %s %s(%s) { %s IoC.resolve(\"%s.%s\", _obj %s);}\n\n"
                             , returnTypeStringShort
                             , methodSignature
                             , String.join(",", paramList)
