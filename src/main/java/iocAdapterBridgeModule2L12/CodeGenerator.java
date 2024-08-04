@@ -117,6 +117,7 @@ public class CodeGenerator {
             ClassLoader classLoader = manager.getClassLoader(null);
             Class<?> clazz = classLoader.loadClass(qualifiedClassName);
 
+            //TODO добавить проверку на приведение типов
             return (T) clazz.getDeclaredConstructor(Uobject.class).newInstance(uobject);
         }
         return null;
@@ -139,8 +140,6 @@ public class CodeGenerator {
 
         // Создаем новый файл адаптера
         File adapterFile = new File("src\\main\\java\\iocAdapterBridgeModule2L12", String.format( "%sAdapter.java", baseName));
-        // Создаем пустой файл
-        adapterFile.createNewFile();
 
         // Открываем файл для записи
         try (PrintWriter writer = new PrintWriter(adapterFile)) {
