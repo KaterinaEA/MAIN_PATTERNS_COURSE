@@ -3,10 +3,8 @@ package iocAdapterBridgeModule2L12;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
 import org.slf4j.LoggerFactory;
-import javax.tools.DiagnosticCollector;
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileObject;
-import javax.tools.ToolProvider;
+
+import javax.tools.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
