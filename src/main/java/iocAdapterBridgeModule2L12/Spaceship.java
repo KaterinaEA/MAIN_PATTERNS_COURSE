@@ -9,7 +9,7 @@ public class Spaceship implements Uobject{
     @Override
     public Object getProperty(String key) {
 
-        //System.out.println(String.format("Running getProperties %s Spaceship", key));
+        System.out.println(String.format("Running getProperties %s Spaceship", key));
         return dictionaryProperty.get(key);
 
     }
@@ -18,7 +18,7 @@ public class Spaceship implements Uobject{
     public void setProperty(String key, Object value) {
 
         dictionaryProperty.put(key, value);
-        //System.out.println(String.format("Running setProperties %s=%s Spaceship", key, value.toString()));
+        System.out.println(String.format("Running setProperties %s=%s Spaceship", key, value.toString()));
 
     }
 }

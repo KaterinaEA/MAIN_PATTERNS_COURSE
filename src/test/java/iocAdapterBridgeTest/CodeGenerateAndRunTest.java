@@ -64,10 +64,11 @@ public class CodeGenerateAndRunTest {
         for (File file : javaFiles) {
             if (isInterfaceClass(file)) {
 
-                //System.out.println(getSourceCode(file));
-                InMemoryClass adapter = IoC.resolve("Adapter", file, uobject);
 
-                adapter.runCode();
+                //System.out.println(getSourceCode(file));
+                //InMemoryClass adapter = IoC.resolve("Adapter", file, uobject);
+
+                //adapter.runCode();
 
             }
 
