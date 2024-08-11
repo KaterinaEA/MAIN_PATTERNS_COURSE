@@ -121,6 +121,7 @@ public class CodeGenerator {
         return null;
     }
 
+
     private static void generateAdapter(File file) throws Exception {
         String returnStr;
 
