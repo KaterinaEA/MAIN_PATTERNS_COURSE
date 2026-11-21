@@ -14,8 +14,6 @@ public class RegisterDependencyCommand implements ICommand {
 
         _dependency = dependency;
         _dependencyResolverStrategy = dependencyResolverStrategy;
-        HashMap<String, Function<Object[], Object>> currentScope = IoC.resolve("IoC.Scope.Current");
-        currentScope.put(dependency, dependencyResolverStrategy);
 
     }
 

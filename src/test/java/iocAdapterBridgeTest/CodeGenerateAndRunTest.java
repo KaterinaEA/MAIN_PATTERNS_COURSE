@@ -1,6 +1,7 @@
 package iocAdapterBridgeTest;
 
 
+import exceptionModule1L3.ICommand;
 import iocAdapterBridgeModule2L12.*;
 import iocModule2L1.IoC;
 import iocModule2L1.Scope.InitCommand;
@@ -29,8 +30,8 @@ public class CodeGenerateAndRunTest {
         Function<Object[], Object> functionVector        = (args) -> new Vector((int[]) args[0]);
         Function<Object[], Object> functionAngle         = (args) -> new Angle((int) args[0], (int) args[1]);
 
-        IoC.resolve("IoC.register","Vector", functionVector);
-        IoC.resolve("IoC.register","Angle", functionAngle);
+        register("Vector", functionVector);
+        register("Angle", functionAngle);
 
         Function<Object[], Object> functionAdapter = (args) -> {
 
@@ -51,7 +52,12 @@ public class CodeGenerateAndRunTest {
 
         };
 
-        IoC.resolve("IoC.register", "Adapter", functionAdapter);
+        register("Adapter", functionAdapter);
+    }
+
+    private static void register(String key, Function<Object[], Object> strategy) {
+        ICommand command = IoC.resolve("IoC.register", key, strategy);
+        command.execute();
     }
 
     @Test
@@ -94,8 +100,8 @@ public class CodeGenerateAndRunTest {
         Function<Object[], Object> functionMovableGetPosition   = (args) -> spaceship.getProperty("position");
         Function<Object[], Object> functionRotableGetAngle      = (args) -> spaceship.getProperty("angle");
 
-        IoC.resolve("IoC.register", "Movable.getPosition", functionMovableGetPosition);
-        IoC.resolve("IoC.register", "Rotable.getAngle", functionRotableGetAngle);
+        register("Movable.getPosition", functionMovableGetPosition);
+        register("Rotable.getAngle", functionRotableGetAngle);
 
         // TODO понять можно ли такие ссыли на экземпляр spaceship в лямбде делать
         Function<Object[], Object> functionMovableSetPosition         = (args) -> {
@@ -116,11 +122,11 @@ public class CodeGenerateAndRunTest {
             return null;
         };
 
-        IoC.resolve("IoC.register", "Movable.getPosition", functionMovableGetPosition);
-        IoC.resolve("IoC.register", "Movable.setPosition", functionMovableSetPosition);
+        register("Movable.getPosition", functionMovableGetPosition);
+        register("Movable.setPosition", functionMovableSetPosition);
 
-        IoC.resolve("IoC.register", "Rotable.getAngle", functionRotableGetAngle);
-        IoC.resolve("IoC.register", "Rotable.setAngle", functionRotableSetAngle);
+        register("Rotable.getAngle", functionRotableGetAngle);
+        register("Rotable.setAngle", functionRotableSetAngle);
 
         List<File> javaFiles = CodeGenerator.SearchInterface();
 

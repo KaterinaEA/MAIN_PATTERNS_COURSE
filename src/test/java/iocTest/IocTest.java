@@ -23,7 +23,7 @@ public class IocTest {
     @Test
     public void testIoCresolveStrategy(){
 
-        CommandMove move = IoC.resolve_old("CommandMove");
+        CommandMove move = IoC.resolve("CommandMove");
         move.execute();
 
     }
@@ -31,11 +31,11 @@ public class IocTest {
     @Test
     public void testIoCresolveStrategyWithArgs(){
 
-        Queue<ICommand> q = IoC.resolve_old("QueueCommand");
+        Queue<ICommand> q = IoC.resolve("QueueCommand");
 
-        CommandMove move = IoC.resolve_old("CommandMove");
+        CommandMove move = IoC.resolve("CommandMove");
 
-        AddQueue addQueue = IoC.resolve_old("AddQueue", q, move);
+        AddQueue addQueue = IoC.resolve("AddQueue", q, move);
 
         addQueue.execute();
 
@@ -44,7 +44,7 @@ public class IocTest {
     @Test(expected = Exception.class)
     public void testIoCresolveStrategyException() {
 
-        CommandMove move = IoC.resolve_old("CommandMove1");
+        CommandMove move = IoC.resolve("CommandMove1");
 
         move.execute();
 

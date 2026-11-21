@@ -1,8 +1,10 @@
 package iocTest;
 
+import exceptionModule1L3.ICommand;
 import iocModule2L1.CommandMove;
 import iocModule2L1.IoC;
 import iocModule2L1.Scope.InitCommand;
+import org.junit.After;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -18,17 +20,27 @@ public class ScopeTest {
 
         initCommand.execute();
 
-        IoC.resolve("IoC.Scope.New", "ScopeIdGame1");
+        ICommand newScope = IoC.resolve("IoC.Scope.New", "ScopeIdGame1");
+        newScope.execute();
 
-        IoC.resolve("IoC.Scope.Current.Set", "ScopeIdGame1");
+        ICommand setScope = IoC.resolve("IoC.Scope.Current.Set", "ScopeIdGame1");
+        setScope.execute();
 
+    }
+
+    @After
+    public void clearScope() {
+        ICommand clearScope = IoC.resolve("IoC.Scope.Current.Clear");
+        clearScope.execute();
     }
 
     @Test
     public void testRegister() {
 
-        Function<Object[], Object> functionMove         = (args) -> new CommandMove ();
-        IoC.resolve("IoC.register", "CommandMove", functionMove);
+        Function<Object[], Object> functionMove = (args) -> new CommandMove ();
+        ICommand registerCommand = IoC.resolve("IoC.register", "CommandMove", functionMove);
+        registerCommand.execute();
+
         CommandMove move = IoC.resolve("CommandMove");
         move.execute();
 
@@ -43,8 +55,11 @@ public class ScopeTest {
 
     @Test(expected = Exception.class)
     public void testGetExceptionWhenNotDependency() {
-        CommandMove move = IoC.resolve("CommandMove");
-        move.execute();
+        // Ключ заведомо нигде не регистрируется — в отличие от "CommandMove",
+        // который могут зарегистрировать другие тестовые классы в общем rootScope
+        // в рамках того же прогона JVM, из-за чего проверка отсутствия зависимости
+        // стала бы зависеть от порядка выполнения тестов.
+        IoC.resolve("ScopeTest.NonExistentDependency");
     }
 
 
