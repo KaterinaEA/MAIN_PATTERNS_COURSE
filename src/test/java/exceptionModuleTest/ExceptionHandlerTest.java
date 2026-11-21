@@ -100,7 +100,9 @@ public class ExceptionHandlerTest {
 
         ExceptionHandler exceptionHandler = ExceptionHandler.getInstance(q);
 
-        exceptionHandler.RegisterHandler(retry, new ArithmeticException(), retry );
+        // Обработчик нужно регистрировать на команду, которая реально бросает исключение
+        // (command3), а не на сам повторитель (retry) — иначе обработчик никогда не вызовется.
+        exceptionHandler.RegisterHandler(command3, new ArithmeticException(), retry );
 
         q.add(command3);
 
