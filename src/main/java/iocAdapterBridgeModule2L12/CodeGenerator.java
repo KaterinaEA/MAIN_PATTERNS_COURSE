@@ -61,18 +61,20 @@ public class CodeGenerator {
     }
     public static String getClassName(File file) {
 
-        // Путь к файлу класса
-        String classFilePath = file.getPath();
+        // Путь к файлу класса. Нормализуем разделители, т.к. "\java" ищется
+        // только для Windows-пути — на Linux (например, в CI) separator это "/",
+        // и indexOf("\\java") не находил совпадение.
+        String classFilePath = file.getPath().replace('\\', '/');
 
         String classNameFull = classFilePath.substring(0, classFilePath.lastIndexOf('.'));
 
-        // Находим индекс первого вхождения "\java"
-        int index = classNameFull.indexOf("\\java");
+        // Находим индекс первого вхождения "/java"
+        int index = classNameFull.indexOf("/java");
 
-        // Извлекаем подстроку после индекса "\java" до конца пути
+        // Извлекаем подстроку после индекса "/java/" до конца пути
         String className = classNameFull.substring(index+6);
 
-        return className.replace("\\", ".");
+        return className.replace("/", ".");
 
     }
 
@@ -136,8 +138,9 @@ public class CodeGenerator {
         // Получаем список методов интерфейса
         Method[] methods = sourceInterface.getMethods();
 
-        // Создаем новый файл адаптера
-        File adapterFile = new File("src\\main\\java\\iocAdapterBridgeModule2L12", String.format( "%sAdapter.java", baseName));
+        // Создаем новый файл адаптера (прямой слеш работает как разделитель путей
+        // и на Windows, и на Linux; жёстко прописанный "\\" ломался в CI на Linux)
+        File adapterFile = new File("src/main/java/iocAdapterBridgeModule2L12", String.format( "%sAdapter.java", baseName));
 
         // Открываем файл для записи
         try (PrintWriter writer = new PrintWriter(adapterFile)) {
