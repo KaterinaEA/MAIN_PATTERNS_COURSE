@@ -12,13 +12,15 @@ import lspIspModule1L2.rotate.IRotable;
 import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.function.Function;
 
 
 import static iocAdapterBridgeModule2L12.CodeGenerator.getClassName;
 import static iocAdapterBridgeModule2L12.CodeGenerator.isInterfaceClass;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 
 public class CodeGenerateAndRunTest {
@@ -34,22 +36,11 @@ public class CodeGenerateAndRunTest {
         register("Angle", functionAngle);
 
         Function<Object[], Object> functionAdapter = (args) -> {
-
-            // TODO переделать
             try {
                 return CodeGenerator.typeOf((File) args[0], (Uobject) args[1]);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException(e);
-            } catch (InvocationTargetException e) {
-                throw new RuntimeException(e);
-            } catch (InstantiationException e) {
-                throw new RuntimeException(e);
-            } catch (IllegalAccessException e) {
+            } catch (ReflectiveOperationException e) {
                 throw new RuntimeException(e);
             }
-
         };
 
         register("Adapter", functionAdapter);
@@ -63,22 +54,33 @@ public class CodeGenerateAndRunTest {
     @Test
     public void whenStringIsCompiled_ThenCodeShouldExecute() throws IOException {
 
-        Uobject uobject = new Spaceship();
+        Spaceship spaceship = new Spaceship();
+
+        int[] positionMass = {5, 7};
+        Vector position = IoC.resolve("Vector", positionMass);
+        spaceship.setProperty("position", position);
+
+        Function<Object[], Object> functionMovableGetPosition = (args) -> spaceship.getProperty("position");
+        register("Movable.getPosition", functionMovableGetPosition);
 
         List<File> javaFiles = CodeGenerator.SearchInterface();
 
+        boolean movableAdapterChecked = false;
+
         for (File file : javaFiles) {
-            if (isInterfaceClass(file)) {
+            if (isInterfaceClass(file) && getClassName(file).equals("lspIspModule1L2.move.IMovable")) {
 
+                IMovable movableAdapter = IoC.resolve("Adapter", file, spaceship);
 
-                //System.out.println(getSourceCode(file));
-                //InMemoryClass adapter = IoC.resolve("Adapter", file, uobject);
+                assertNotNull("Сгенерированный адаптер должен быть создан", movableAdapter);
+                assertArrayEquals("Сгенерированный адаптер должен вернуть значение через IoC-стратегию",
+                        position.getM(), movableAdapter.getPosition().getM());
 
-                //adapter.runCode();
-
+                movableAdapterChecked = true;
             }
-
         }
+
+        assertEquals("Интерфейс IMovable должен быть найден и адаптер проверен", true, movableAdapterChecked);
     }
 
     @Test
@@ -100,10 +102,6 @@ public class CodeGenerateAndRunTest {
         Function<Object[], Object> functionMovableGetPosition   = (args) -> spaceship.getProperty("position");
         Function<Object[], Object> functionRotableGetAngle      = (args) -> spaceship.getProperty("angle");
 
-        register("Movable.getPosition", functionMovableGetPosition);
-        register("Rotable.getAngle", functionRotableGetAngle);
-
-        // TODO понять можно ли такие ссыли на экземпляр spaceship в лямбде делать
         Function<Object[], Object> functionMovableSetPosition         = (args) -> {
 
             Vector currentVector = (Vector) spaceship.getProperty("position");
@@ -118,7 +116,7 @@ public class CodeGenerateAndRunTest {
             Angle currentAngle = (Angle) spaceship.getProperty("angle");
             Angle newAngle = Angle.plus(currentAngle, (Angle) args[1]);
 
-            spaceship.setProperty("position", newAngle);
+            spaceship.setProperty("angle", newAngle);
             return null;
         };
 
@@ -130,28 +128,48 @@ public class CodeGenerateAndRunTest {
 
         List<File> javaFiles = CodeGenerator.SearchInterface();
 
+        Vector expectedPositionAfterMove = Vector.plus(vector, newVelocity);
+        Angle rotationDelta = IoC.resolve("Angle", 1, 5);
+        Angle expectedAngleAfterRotate = Angle.plus(angle, rotationDelta);
+
+        boolean movableAdapterChecked = false;
+        boolean rotableAdapterChecked = false;
+
         for (File file : javaFiles) {
             if (isInterfaceClass(file)) {
 
-                // TODO переделать
                 if (getClassName(file).equals("lspIspModule1L2.move.IMovable")) {
 
                     IMovable movableAdapter = IoC.resolve("Adapter", file, spaceship);
                     movableAdapter.setPosition(newVelocity);
-                    Vector exceptedVector = movableAdapter.getPosition();
-                    exceptedVector.equals(vector);
+                    Vector actualPosition = movableAdapter.getPosition();
+
+                    assertArrayEquals("Положение после setPosition должно смещаться на величину скорости",
+                            expectedPositionAfterMove.getM(), actualPosition.getM());
+
+                    movableAdapterChecked = true;
 
                 } else if (getClassName(file).equals("lspIspModule1L2.rotate.IRotable")) {
 
                     IRotable rotableAdapter = IoC.resolve("Adapter", file, spaceship);
-                    Angle exceptedAngle = rotableAdapter.getAngle();
-                    exceptedAngle.equals(angle);
+                    rotableAdapter.setAngle(rotationDelta);
+                    Angle actualAngle = rotableAdapter.getAngle();
+
+                    assertEquals("Направление угла после поворота должно обновиться",
+                            expectedAngleAfterRotate.get_direction(), actualAngle.get_direction());
+                    assertEquals("Величина угла после поворота должна обновиться",
+                            expectedAngleAfterRotate.get_n(), actualAngle.get_n());
+
+                    rotableAdapterChecked = true;
 
                 }
 
             }
 
         }
+
+        assertEquals("Интерфейс IMovable должен быть найден и адаптер проверен", true, movableAdapterChecked);
+        assertEquals("Интерфейс IRotable должен быть найден и адаптер проверен", true, rotableAdapterChecked);
     }
 
 }
