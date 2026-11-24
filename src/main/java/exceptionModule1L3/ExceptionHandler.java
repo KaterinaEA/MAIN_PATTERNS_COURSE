@@ -4,8 +4,9 @@ import java.util.*;
 
 public class ExceptionHandler {
 
-
-    private static ExceptionHandler INSTANCE;
+    // Один обработчик на каждую очередь: разные очереди (например, в разных тестах)
+    // не должны делить между собой ни очередь, ни зарегистрированные обработчики.
+    private static final Map<Queue<ICommand>, ExceptionHandler> INSTANCES = new WeakHashMap<>();
 
     private final Queue<ICommand> _queue;
 
@@ -19,12 +20,8 @@ public class ExceptionHandler {
 
     }
 
-    public static ExceptionHandler getInstance(Queue<ICommand> q) {
-        if(INSTANCE == null) {
-            INSTANCE = new ExceptionHandler(q);
-        }
-
-        return INSTANCE;
+    public static synchronized ExceptionHandler getInstance(Queue<ICommand> q) {
+        return INSTANCES.computeIfAbsent(q, ExceptionHandler::new);
     }
 
     public void handle(ICommand command, Exception e ) {
@@ -54,11 +51,10 @@ public class ExceptionHandler {
 
     public void RegisterHandler (ICommand command, Exception e, ICommand h) {
 
-        Map<Class<? extends Exception>, ICommand> map = new HashMap<>();
-
-        map.put(e.getClass(), h);
-
-        store.put(command.getClass(), map);
+        // Дополняем карту обработчиков для класса команды, а не затираем её:
+        // иначе регистрация второго исключения для той же команды стирала бы первую.
+        store.computeIfAbsent(command.getClass(), k -> new HashMap<>())
+                .put(e.getClass(), h);
 
     }
 

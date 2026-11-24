@@ -15,17 +15,17 @@ public class Main {
 
         init.init();
 
-        CommandMove move = IoC.resolve_old("CommandMove");
+        CommandMove move = IoC.resolve("CommandMove");
 
         move.execute();
 
-        Queue<ICommand> queueCommands = IoC.resolve_old("QueueCommand");
+        Queue<ICommand> queueCommands = IoC.resolve("QueueCommand");
 
-        Retry retry = IoC.resolve_old("Retry", move);
+        Retry retry = IoC.resolve("Retry", move);
 
         retry.execute();
 
-        AddQueue addQueue = IoC.resolve_old("AddQueue", queueCommands, move);
+        AddQueue addQueue = IoC.resolve("AddQueue", queueCommands, move);
 
         addQueue.execute();
 
